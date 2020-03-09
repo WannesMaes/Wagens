@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-
+//Nog naar int aanpassen
 //Wannes, Leen, Birte
 public class Inlezen 
 {
