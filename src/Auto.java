@@ -1,15 +1,15 @@
 //Leen, Birte, Wannes
 public class Auto 
 {
-	private String aid;	//Het unieke id nr
+	private int aid;	//Het unieke id nr
 	private Zone zone;	//De toegewezen zone aan de auto
 	
-	public Auto(String id) 
+	public Auto(int id) 
 	{
-		aid = id;
-		zone = new Zone("Niet toegewezen");
+		//Hier mag niet gekomen worden
+		System.out.println("Probleem bij constructor van Auto");
 	}
-	public Auto(String auto, Zone z) 
+	public Auto(int auto, Zone z) 
 	{
 		aid = auto;
 		zone = z;
@@ -19,7 +19,7 @@ public class Auto
 	{
 		zone = z;
 	}
-	public void setAid(String auto) 
+	public void setAid(int auto) 
 	{
 		aid = auto;
 	}
@@ -28,7 +28,7 @@ public class Auto
 	{
 		return zone;
 	}
-	public String getAid() 
+	public int getAid() 
 	{
 		return aid;
 	}
