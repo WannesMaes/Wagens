@@ -1,18 +1,21 @@
 //Leen, Birte, Wannes
+import java.util.ArrayList;
 public class Auto 
 {
 	private int aid;	//Het unieke id nr
 	private Zone zone;	//De toegewezen zone aan de auto
+	private ArrayList<Integer[]> tijdsloten;
 	
 	public Auto(int id) 
 	{
 		//Hier mag niet gekomen worden
 		System.out.println("Probleem bij constructor van Auto");
 	}
-	public Auto(int auto, Zone z) 
+	public Auto(int auto, Zone z, ArrayList<Integer[]> tijd) 
 	{
 		aid = auto;
 		zone = z;
+		tijdsloten=tijd;
 	}
 	
 	public void setZone(Zone z) 
@@ -35,5 +38,17 @@ public class Auto
 	public String toString()
 	{
 		return "Auto met ID: "+this.getAid()+" met Toegekende zone: "+this.getZone().getZid();
+	}
+	public ArrayList<Integer[]> getTijdsloten() {
+		return tijdsloten;
+	}
+	public void setTijdsloten(ArrayList<Integer[]> tijdsloten) {
+		this.tijdsloten = tijdsloten;
+	}
+	public Boolean testenopTijd(int startTijd, int duurtijd) {
+		return true;
+	}
+	public void pasAan(int startTijd, int duurtijd) {
+		
 	}
 }
