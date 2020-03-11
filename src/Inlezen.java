@@ -1,19 +1,18 @@
 import java.io.*;
 import java.util.*;
-//Nog naar int aanpassen
 //Wannes, Leen, Birte
 public class Inlezen 
 {
 	private ArrayList<Auto> autos= new ArrayList<Auto>();
 	private ArrayList<Reservatie> reservaties = new ArrayList<Reservatie>();
 	private ArrayList<Zone> zones= new ArrayList<Zone>();
-	
+	private static final int MINUTENINDAG = 1440;
 	public Inlezen()
 	{
 		String filenaam = "D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/100_5_14_25.csv";
         BufferedReader reader = null;
         String regel = "";
-        Zone startZone = new Zone();
+        Zone startZone = null;
         
         try 
         {
@@ -29,8 +28,8 @@ public class Inlezen
             		int aantalAanvragen = Integer.parseInt(aanvragen[1]);
             		//Verwerken van het getal*regels
             		String[] nieuweAanvraag;
-            		String nid;
             		Zone nzone;
+            		int nzoneID;
             		int ndag,nstTijd,ndtijd,pen1,pen2;
             		for(int i=0;i<aantalAanvragen;i++)
             		{
@@ -38,21 +37,23 @@ public class Inlezen
             			regel = reader.readLine();
             			nieuweAanvraag = regel.split(";");
             			//Verwerken van regel
-            			nid = nieuweAanvraag[0];
-            			nzone = new Zone(nieuweAanvraag[1]);
+            			nzoneID = Integer.parseInt(nieuweAanvraag[1].substring(1));	//Verwerken van zID naar ID
+            			//System.out.println(nzoneID);
+            			nzone = new Zone(nzoneID);
             			ndag = Integer.parseInt(nieuweAanvraag[2]);
             			nstTijd = Integer.parseInt(nieuweAanvraag[3]);
+            			nstTijd += ndag*MINUTENINDAG;
             			ndtijd = Integer.parseInt(nieuweAanvraag[4]);
             			String[] nieuweAutos = nieuweAanvraag[5].split(",");
-            			ArrayList<String> nAutoIDs = new ArrayList<String>();
+            			ArrayList<Integer> nAutoIDs = new ArrayList<Integer>();
             			for(int j=0;j<nieuweAutos.length;j++)
             			{
-            				nAutoIDs.add(nieuweAutos[j]);
+            				nAutoIDs.add(Integer.parseInt(nieuweAutos[j].substring(3)));
             			}
-            			
-            			pen1 = Integer.parseInt(nieuweAanvraag[6]);
-            			pen2 = Integer.parseInt(nieuweAanvraag[7]);
-            			Reservatie r = new Reservatie(nid,nzone,ndag,nstTijd,ndtijd,nAutoIDs,pen1,pen2);
+            			//System.out.println(nAutoIDs);
+            			pen1 = Integer.parseInt(nieuweAanvraag[6]);	//Niet toegewezen
+            			pen2 = Integer.parseInt(nieuweAanvraag[7]);	//Aanliggende zone
+            			Reservatie r = new Reservatie(i,nzone,ndag,nstTijd,ndtijd,nAutoIDs,pen1,pen2);
             			System.out.println(r);
             			this.getReservaties().add(r);
             		}
@@ -64,19 +65,21 @@ public class Inlezen
             		int aantalZones = Integer.parseInt(zones[1]);
             		//Verwerken van het getal*regels
             		String[] nieuweZone;
+            		int zoneID;
             		for(int i=0;i<aantalZones;i++)
             		{
             			//Zone regel inlezen
             			regel = reader.readLine();
             			nieuweZone = regel.split(";");
             			//Verwerken van regel
+            			zoneID = Integer.parseInt(nieuweZone[0].substring(1));
             			String[] aanliggendeZones = nieuweZone[1].split(",");
-            			ArrayList<String> nZoneIDs = new ArrayList<String>();
+            			ArrayList<Integer> nZoneIDs = new ArrayList<Integer>();
             			for(int j=0;j<aanliggendeZones.length;j++)
             			{
-            				nZoneIDs.add(aanliggendeZones[j]);
+            				nZoneIDs.add(Integer.parseInt(aanliggendeZones[j].substring(1)));
             			}
-            			Zone z = new Zone(nieuweZone[0],nZoneIDs);
+            			Zone z = new Zone(zoneID,nZoneIDs);
             			System.out.println(z);
             			this.getZones().add(z);
             			//Midden zone voor initiele oplossing
@@ -97,7 +100,7 @@ public class Inlezen
             		{
             			//Auto regel inlezen
             			regel = reader.readLine();
-            			Auto a = new Auto(regel,startZone);
+            			Auto a = new Auto(Integer.parseInt(regel.substring(3)),startZone);
             			System.out.println(a);
             			this.getAutos().add(a);
             		}
@@ -114,7 +117,7 @@ public class Inlezen
         }
         finally 
         {
-            if (reader != null) 
+        	if (reader != null) 
             {
                 try 
                 {

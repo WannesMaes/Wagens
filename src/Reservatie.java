@@ -3,15 +3,15 @@ import java.util.ArrayList;
 
 
 public class Reservatie {
-	private String id;
+	private int id;
 	private Zone zone;
 	private int dag;
 	private int startTijd;
 	private int duurTijd;
-	private ArrayList<String> autoIDs;
+	private ArrayList<Integer> autoIDs;
 	private int penalty1;
 	private int penalty2;
-	public Reservatie(String nid, Zone nzone, int ndag, int nstTijd, int ndtijd, ArrayList<String> nautoIDs, int pen1, int pen2) {
+	public Reservatie(int nid, Zone nzone, int ndag, int nstTijd, int ndtijd, ArrayList<Integer> nautoIDs, int pen1, int pen2) {
 		id = nid;
 		zone = nzone;
 		dag = ndag;
@@ -21,10 +21,10 @@ public class Reservatie {
 		penalty1 = pen1;
 		penalty2 = pen2;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public int getDag() {
@@ -51,10 +51,10 @@ public class Reservatie {
 	public void setStartTijd(int startTijd) {
 		this.startTijd = startTijd;
 	}
-	public ArrayList<String> getAutoIDs() {
+	public ArrayList<Integer> getAutoIDs() {
 		return autoIDs;
 	}
-	public void setautoIDs(ArrayList<String> AutoIDs) {
+	public void setautoIDs(ArrayList<Integer> AutoIDs) {
 		this.autoIDs = AutoIDs;
 	}
 	public int getPenalty1() {

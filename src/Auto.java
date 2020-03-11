@@ -11,6 +11,12 @@ public class Auto
 		//Hier mag niet gekomen worden
 		System.out.println("Probleem bij constructor van Auto");
 	}
+	public Auto(int auto, Zone z)
+	{
+		aid = auto;
+		zone = z;
+		tijdsloten = new ArrayList<Integer[]>();
+	}
 	public Auto(int auto, Zone z, ArrayList<Integer[]> tijd) 
 	{
 		aid = auto;

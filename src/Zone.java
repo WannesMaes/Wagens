@@ -3,45 +3,44 @@ import java.util.ArrayList;
 //Wannes, Leen, Birte
 public class Zone 
 {
-	private String zid;
-	private ArrayList<String> azone;
+	private int zid;
+	private ArrayList<Integer> azone;
 	
 	public Zone()
 	{
-		this.setZid("Ongeldig");
-		azone = new ArrayList<String>();
+		//Hier mag niet gekomen worden
+		System.out.println("Probleem bij constructor van Zone");
 	}
-	public Zone(String id)
+	public Zone(int id)
 	{
 		this.setZid(id);
-		azone = new ArrayList<String>();
+		azone = new ArrayList<Integer>();
 	}
-	public Zone(String id, ArrayList<String> zones)
+	public Zone(int id, ArrayList<Integer> zones)
 	{
 		this.setZid(id);
-		azone = new ArrayList<String>(zones.size());
-		azone = zones;
+		azone = new ArrayList<Integer>(zones);
 	}
 
 	//Setters en getters
-	public String getZid()
+	public int getZid()
 	{
 		return zid;
 	}
-	public void setZid(String id)
+	public void setZid(int id)
 	{
 		zid = id;
 	}
-	public ArrayList<String> getAzone()
+	public ArrayList<Integer> getAzone()
 	{
 		return azone;
 	}
-	public void setAzone(ArrayList<String> zones)
+	public void setAzone(ArrayList<Integer> zones)
 	{
 		azone = zones;
 	}
 	//Andere functies
-	public void addAzone(String zone)
+	public void addAzone(int zone)
 	{
 		azone.add(zone);
 	}
