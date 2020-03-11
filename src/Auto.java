@@ -11,6 +11,7 @@ public class Auto
 		//Hier mag niet gekomen worden
 		System.out.println("Probleem bij constructor van Auto");
 	}
+	//Constructor voor het inlezen van de csv
 	public Auto(int auto, Zone z)
 	{
 		aid = auto;
