@@ -6,7 +6,10 @@ public class Controller
 	
 	public Controller()
 	{
-		Inlezen i = new Inlezen();
+		Inlezen in = new Inlezen();
+		System.out.println(in.getAutos());
+		System.out.println(in.getReservaties());
+		System.out.println(in.getZones());
 	}
 	public static void main(String[] args) 
 	{
