@@ -57,7 +57,7 @@ public class Beslissing {
 		
 	}
 	
-	//Bereken de kost van de 
+	//Bereken de kost van de + alles staat op correcte volgorde (argumenten lijsten)
 	public int berekenKost(ArrayList<Auto> autoLijst, ArrayList<Reservatie> reservatieLijst, ArrayList<Zone> zoneLijst ) {
 		int kost=0;
 		int gewensteZoneID;
