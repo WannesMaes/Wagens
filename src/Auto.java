@@ -52,10 +52,47 @@ public class Auto
 	public void setTijdsloten(ArrayList<Integer[]> tijdsloten) {
 		this.tijdsloten = tijdsloten;
 	}
-	public Boolean testenopTijd(int startTijd, int duurtijd) {
+	public Boolean testenopTijd(int startTijd, int duurTijd) {
+		int startTijdgeg;
+		int eindTijdgeg;
+		int eindTijd = startTijd + duurTijd;
+		
+		for(int i=0; i<tijdsloten.size();i++) {
+			startTijdgeg = tijdsloten.get(i)[0];
+			eindTijdgeg = tijdsloten.get(i)[1];
+			if(startTijd< startTijdgeg && eindTijd < eindTijdgeg) { //gaat alleen als arraylist chronologisch gesorteerd wordt)
+				return true;
+			}
+			if(startTijd >= eindTijdgeg) { 
+				continue;
+			}
+			if(startTijd >= startTijdgeg) { //impliciet: startTijd is < eindTijdgeg
+				return false;
+			}
+			if(eindTijd > startTijdgeg) { //impliciet: startTijd is < startTijdgeg
+				return false;
+			}
+		}
 		return true;
 	}
-	public void pasAan(int startTijd, int duurtijd) {
-		
+	public void pasAan(int startTijd, int duurTijd) {
+		int eindTijd = startTijd + duurTijd;
+		Integer[] array = new Integer[] {startTijd,eindTijd};
+		int startTijdgeg;
+		for(int i=0; i<tijdsloten.size();i++) {
+			startTijdgeg = tijdsloten.get(i)[0];
+			if(startTijd <= startTijdgeg) {
+				if(i==0) {
+					tijdsloten.add(0,array);
+					break;
+				}
+				tijdsloten.add(i,array);
+				break;
+			}
+			if(i == tijdsloten.size()-1) {
+				tijdsloten.add(i+1,array);
+				break;
+			}
+		}
 	}
 }
