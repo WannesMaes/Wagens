@@ -128,9 +128,7 @@ public class Beslissing {
 		ArrayList<Integer> beste_az = az;
 		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
 		int beste_kost = opl_kost;
-		int autoID;
-		int zoneID;
-		int resID;
+		int autoID, zoneID, resID;
 		int aantRes = ra.size();
 		int aantAuto= az.size();
 		Random random = new Random();
@@ -150,13 +148,14 @@ public class Beslissing {
 			if(opl_kost < beste_kost) {
 				beste_ra = opl_ra;
 				beste_az = beste_az;
+				beste_kost = opl_kost;
 			}
 			
 		}
 		for(int j=0; j<AANTAL; j++) {
 			//aanpassen auto - reservatie heeft kleinere invloed
 			resID = random.nextInt(aantRes);
-			autoID = random.nextInt();
+			autoID = random.nextInt(aantAuto);
 			veranderAutoVanReservatie(resID, autoID); 
 			opl_ra = getResEnAuto();
 			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
@@ -164,6 +163,7 @@ public class Beslissing {
 			if(opl_kost < beste_kost) {
 				beste_ra = opl_ra;
 				beste_az = beste_az;
+				beste_kost = opl_kost;
 			}
 			
 		}
