@@ -152,5 +152,36 @@ public class Beslissing {
 		this.setResEnAuto(beste_ra);
 		this.setKost(beste_kost);
 	}
-	
+	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> az,ArrayList<Auto> autos) {
+		Reservatie reservatie=reservatieLijst.get(resID);
+		Boolean goed=false;
+		//kijken of de auto in de autolijst van res zit
+		for(int i=0;i<reservatie.getAutoIDs().size();i++) {
+			if(reservatie.getAutoIDs().get(i)==autoID) {
+				goed=true;
+				break;
+			}
+		}
+		if(goed==false) return goed;
+		//testen of auto aanliggende zone is of eigen zone
+		if(az.get(autoID) == reservatie.getZone().getZid()) {
+			goed=true;
+		}
+		else {
+			for(int j=0;j<reservatie.getZone().getAzone().size();j++) {
+				if(reservatie.getZone().getAzone().get(j)==az.get(autoID)) {
+					goed=true;
+					break;
+				}
+				else {
+					goed=false;
+				}
+			}
+		}
+		if(goed==false) return goed;
+		//kijken naar tijden reservatie
+		Auto auto=autos.get(autoID);
+		goed = auto.testenopTijd(reservatie.getStartTijd(),reservatie.getDuurTijd());
+		return goed;
+	}
 }
