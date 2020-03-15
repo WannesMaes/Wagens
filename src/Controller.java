@@ -10,6 +10,17 @@ public class Controller
 		System.out.println(in.getAutos());
 		System.out.println(in.getReservaties());
 		System.out.println(in.getZones());
+		
+		/*ArrayList<Integer> az = new ArrayList<Integer>(
+				Arrays.asList(1,2,3,4,4,1));
+		
+		ArrayList<Integer> ra = new ArrayList<Integer>(
+				Arrays.asList(1,6,null,3,null,5));
+				
+		Beslissing b = new Beslissing(az,ra,az,ra);
+		Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
+		out.schrijfWeg();*/
+		
 		/*testen op testenopTijd en pasAan klasse Auto
 		Zone z = new Zone(1);
 		Auto auto = new Auto(1,z);
