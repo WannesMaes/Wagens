@@ -5,21 +5,16 @@ public class Beslissing {
 	
 	private ArrayList<Integer> autoEnZone;//lengte van voertuigen en ingevuld met zones (zone nummers zonder 'z')
 	private ArrayList<Integer> resEnAuto;// lengte van aantal reservaties en ingevuld met auto nummers (zonder 'car')
-	
-	private ArrayList<Integer> oude_autoEnZone;//lengte van voertuigen en ingevuld met zones (zone nummers zonder 'z')
-	private ArrayList<Integer> oude_resEnAuto;
-	
 	private int kost = 0;
-	private int oude_kost = 0;
-	private static int AANTAL = 100;
+	
+	private static int AANTAL_RA = 100; // later eventueel als argument in 
+	private static int AANTAL_AZ = 100;
 	
 	public Beslissing() {}
 	
-	public Beslissing(ArrayList<Integer> az, ArrayList<Integer> ra, ArrayList<Integer> o_az, ArrayList<Integer> o_ra) {
+	public Beslissing(ArrayList<Integer> az, ArrayList<Integer> ra) {
 		autoEnZone = az;
 		resEnAuto = ra;
-		oude_autoEnZone = o_az;
-		oude_resEnAuto = o_ra;
 
 	}
 	
@@ -32,14 +27,10 @@ public class Beslissing {
 		resEnAuto = ra;
 		
 	}
-	public void setOudeAutoEnZone(ArrayList<Integer> o_az) {
-		oude_autoEnZone = o_az;
-		
+	public void setKost(int k) {
+		kost = k;	
 	}
-	public void setOudeResEnAuto(ArrayList<Integer> o_ra) {
-		oude_resEnAuto = o_ra;
-		
-	}
+
 	
 	//Getters
 	public ArrayList<Integer> getAutoEnZone() {
@@ -50,14 +41,11 @@ public class Beslissing {
 		return resEnAuto;
 		
 	}
-	public ArrayList<Integer> getOudeAutoEnZone() {
-		return oude_autoEnZone;
+	public int getKost() {
+		return kost;
 		
 	}
-	public ArrayList<Integer> getOudeResEnAuto() {
-		return oude_resEnAuto;
-		
-	}
+
 	
 	//tostring
 	public String toString() {
@@ -85,90 +73,84 @@ public class Beslissing {
 		//check of het in de aanliggende zone zit voor alle reservaties
 		for(int i=0; i<reservatieLijst.size(); i++) {
 			gewensteZoneID = reservatieLijst.get(i).getZone().getZid();
+			
+			//check of de reservatie een auto heeft toegewezen gekregen (zoniet -> penalty1 en ga naar volgende iteratie
 			if(ra.get(i) == null) {
+				kost += reservatieLijst.get(i).getPenalty1();
 				continue;
 			}
 			toegewezenAutoID = ra.get(i);
 			toegewezenZoneID = az.get(toegewezenAutoID);
+			
 			// Aangenomen dat toegewezen zone een aanliggende zone is
 			if(toegewezenZoneID != gewensteZoneID ) {
 				kost += reservatieLijst.get(i).getPenalty2();
 			}
-		}
-		
-		//check of de reservatie een auto heeft toegewezen gekregen
-		for(int i=0; i<ra.size(); i++) {
-			if(ra.get(i) == null) {	
-				kost += reservatieLijst.get(i).getPenalty1();
-			}
-		}
-			
+		}	
 		return kost;
 	}
 	
 	//verander auto van zone
-	public void veranderZoneVanAuto(int autoID, int zoneID) {
-		setOudeAutoEnZone(getAutoEnZone());
-		getAutoEnZone().set(autoID,zoneID);
+	public ArrayList<Integer> veranderZoneVanAuto(ArrayList<Integer> az, int autoID, int zoneID) {
+		 az.set(autoID,zoneID);
+		 return az;
 		
 	}
 	
 	//verander auto van de reservatie
-	public void veranderAutoVanReservatie(int resID, int autoID) {
-		setResEnAuto(getResEnAuto());
-		getResEnAuto().set(resID,autoID);
+	public ArrayList<Integer> veranderAutoVanReservatie(ArrayList<Integer> ra, int resID, int autoID) {
+		ra.set(resID,autoID);
+		return ra;
 		
 	}
 	
-	public void localSearch(ArrayList<Integer> ra, ArrayList<Integer> az, ArrayList<Reservatie> reservatieLijst, int aantalZones ) {
-		//start
-		ArrayList<Integer> opl_ra = ra;
-		ArrayList<Integer> opl_az = az;
-		ArrayList<Integer> beste_ra = ra;
-		ArrayList<Integer> beste_az = az;
+	public void localSearch( ArrayList<Reservatie> reservatieLijst, int aantalZones ) {
+		//start - initiele opl + beste + kosten
+		ArrayList<Integer> opl_ra = this.getResEnAuto();
+		ArrayList<Integer> opl_az = this.getAutoEnZone();
+		ArrayList<Integer> beste_ra = opl_ra;
+		ArrayList<Integer> beste_az = opl_az;
+		
 		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
 		int beste_kost = opl_kost;
 		int autoID, zoneID, resID;
-		int aantRes = ra.size();
-		int aantAuto= az.size();
-		Random random = new Random();
+		int aantRes = opl_ra.size();
+		int aantAuto= opl_az.size();
+		Random random = new Random(); //voor random nieuwe oplossing te zoeken
 		
-		//zoek nieuwe oplossing mbv veranderzone of verander auto van reservatie
-		
-		//nog checken van tijden en van aanliggende zones???
-		
-		for(int k=0; k<AANTAL; k++) {
-			//VERANDER AUTO VAN ZONE + GROOTSTE INVLOED
+		//zoek nieuwe oplossing mbv veranderzone en verander auto van reservatie
+		//VERANDER AUTO VAN ZONE + GROOTSTE INVLOED
+		for(int k=0; k<AANTAL_AZ; k++) {
 			autoID = random.nextInt(aantAuto); 
 			zoneID = random.nextInt(aantalZones); 
-			veranderZoneVanAuto(autoID, zoneID); 
-			opl_az = getAutoEnZone();
-			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
+			opl_az = veranderZoneVanAuto(opl_az, autoID, zoneID);
 			
+			//FEASIBLE CHECK : nog checken van tijden en van aanliggende zones??? daarna pas kost berekenen
+			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
 			if(opl_kost < beste_kost) {
 				beste_ra = opl_ra;
-				beste_az = beste_az;
+				beste_az = opl_az;
 				beste_kost = opl_kost;
 			}
-			
-		}
-		for(int j=0; j<AANTAL; j++) {
-			//aanpassen auto - reservatie heeft kleinere invloed
-			resID = random.nextInt(aantRes);
-			autoID = random.nextInt(aantAuto);
-			veranderAutoVanReservatie(resID, autoID); 
-			opl_ra = getResEnAuto();
-			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
-			
-			if(opl_kost < beste_kost) {
-				beste_ra = opl_ra;
-				beste_az = beste_az;
-				beste_kost = opl_kost;
-			}
-			
 		}
 		
+		//VERANDER AUTO - RESERVATIE  + KLEINE INVLOED
+		for(int j=0; j<AANTAL_RA; j++) {
+			resID = random.nextInt(aantRes);
+			autoID = random.nextInt(aantAuto);
+			opl_ra = veranderAutoVanReservatie(opl_ra, resID, autoID); 
+			
+			//FEASIBLE CHECK : nog checken van tijden en van aanliggende zones??? daarna pas kost berekenen
+			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
+			if(opl_kost < beste_kost) {		
+				beste_ra = opl_ra;
+				beste_az = opl_az;
+				beste_kost = opl_kost;
+			}
+		}
+		this.setAutoEnZone(beste_az);
+		this.setResEnAuto(beste_ra);
+		this.setKost(beste_kost);
 	}
 	
-
 }

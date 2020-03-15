@@ -40,12 +40,14 @@ public class Wegschrijven
 		
 		
 	} 
-	//NOG TOEVOEGEN??? KOST???
+
 	public String maakOutput(Beslissing b) 
 	{
 		ArrayList<Integer> az = b.getAutoEnZone();
 		ArrayList<Integer> ra = b.getResEnAuto();
-		String out = "+Vehicle assignments" +'\n';
+		
+		String out = String.valueOf(b.getKost()) + '\n'; 
+		out += "+Vehicle assignments" +'\n';
 		String un = "+Unassigned requests" +'\n';
 		
 		for(int i = 0; i<az.size(); i++ ) {
