@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.Random;
 public class Beslissing {
 	
-	private ArrayList<Integer> autoEnZone;//lengte van voertuigen en ingevuld met zones (zone nummers zonder 'z')
-	private ArrayList<Integer> resEnAuto;// lengte van aantal reservaties en ingevuld met auto nummers (zonder 'car')
+	private ArrayList<Integer> autoEnZone;	// autoEnZone.length = aantal auto's en ingevuld met de toegewezen zones aan die auto(zone nummers zonder 'z')
+	private ArrayList<Integer> resEnAuto;	// resEnAuto.length = aantal reservaties en ingevuld met de toegewezen auto's aan die reservatie (zonder 'car')
 	private int kost = 0;
 	
 	private static int AANTAL_RA = 100; // later eventueel als argument in 
@@ -47,7 +47,7 @@ public class Beslissing {
 	}
 
 	
-	//tostring
+	//toString
 	public String toString() {
 		String zin = "Oplossing met: " + '\n';
 		
@@ -90,18 +90,16 @@ public class Beslissing {
 		return kost;
 	}
 	
-	//verander auto van zone
+	//Veranderd de toegewezen zone van de auto
 	public ArrayList<Integer> veranderZoneVanAuto(ArrayList<Integer> az, int autoID, int zoneID) {
 		 az.set(autoID,zoneID);
-		 return az;
-		
+		 return az;	
 	}
 	
-	//verander auto van de reservatie
+	//Veranderd de toegewezen auto van de reservatie
 	public ArrayList<Integer> veranderAutoVanReservatie(ArrayList<Integer> ra, int resID, int autoID) {
 		ra.set(resID,autoID);
 		return ra;
-		
 	}
 	
 	public void localSearch( ArrayList<Reservatie> reservatieLijst, int aantalZones ) {
@@ -126,6 +124,7 @@ public class Beslissing {
 			opl_az = veranderZoneVanAuto(opl_az, autoID, zoneID);
 			
 			//FEASIBLE CHECK : nog checken van tijden en van aanliggende zones??? daarna pas kost berekenen
+			//Hier moet volgens mij(Wannes) ook nog de verandering van de ra lijst komen die volgt op de zoneverandering
 			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
 			if(opl_kost < beste_kost) {
 				beste_ra = opl_ra;
@@ -152,42 +151,46 @@ public class Beslissing {
 		this.setResEnAuto(beste_ra);
 		this.setKost(beste_kost);
 	}
+	//Doel: nakijken of de wijziging van auto1 naar auto2 in de reservatie wel mogelijk is (auto, zone, tijd).
 	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> opl_az,ArrayList<Auto> autos) {
 		Reservatie reservatie=reservatieLijst.get(resID);
 		Boolean goed=false;
-		//kijken of de auto in de autolijst van res zit
+		//Testen of de auto in de autolijst van res zit (mag die auto wel?)
 		for(int i=0;i<reservatie.getAutoIDs().size();i++) {
 			if(reservatie.getAutoIDs().get(i)==autoID) {
 				goed=true;
 				break;
 			}
 		}
-		if(goed==false) return goed;
-		//testen of auto aanliggende zone is of eigen zone
+		if(goed==false) 
+			return false; //Auto behoort niet tot de gewenste auto en de verandering mag dus niet plaatsvinden
+		//Testen of auto aanliggende zone is of eigen zone
 		if(opl_az.get(autoID) == reservatie.getZone().getZid()) {
-			goed=true;
+			//De auto staat geparkeerd in de gewilde zone
+			goed=true; //Waardeloos want staat al op true
 		}
 		else {
+			goed=false;
 			for(int j=0;j<reservatie.getZone().getAzone().size();j++) {
 				if(reservatie.getZone().getAzone().get(j)==opl_az.get(autoID)) {
-					goed=true;
+					goed=true; //De auto staat geparkeed in een aanliggende zone
 					break;
-				}
-				else {
-					goed=false;
 				}
 			}
 		}
-		if(goed==false) return goed;
-		//kijken naar tijden reservatie
-		Auto auto=autos.get(autoID);
+		if(goed==false) 
+			return false; //De auto staat niet geparkeerd in een gewenste of aanliggende zone en de verandering mag dus niet plaatsvinden
+		//Testen of de auto nog vrij is op de gewenste tijden
+		Auto auto=autos.get(autoID); //Waarom niet enkel die auto doorgeven in functie?
 		goed = auto.testenopTijd(reservatie.getStartTijd(),reservatie.getDuurTijd());
 		return goed;
 	}
+	//Doel: nakijken of de verplaatsing van de auto van zone1 naar zone2 geen onmogelijke reservaties laat staan
 	public ArrayList<Integer> controleVeranderingAutoNaarZone(ArrayList<Integer> ra, int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst){
 		for(int i=0;i<opl_ra.size();i++) {
 			if(opl_ra.get(i)==autoID) {
 				if(zoneID == reservatieLijst.get(i).getZone().getZid()) {
+					//Hoe kom je hierin? Of wanneer roep je deze functie op? Ik snap hem niet echt? WM
 					//wnn auto in eigen zone zit, reservatie is ok
 					continue;
 				}

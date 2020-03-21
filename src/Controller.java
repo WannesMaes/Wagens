@@ -10,7 +10,7 @@ public class Controller
 		System.out.println(in.getAutos());
 		System.out.println(in.getReservaties());
 		System.out.println(in.getZones());
-		
+		System.out.println("File succesvol ingelezen en verwerkt.\n\n");
 		ArrayList<Integer> az = new ArrayList<Integer>(
 				Arrays.asList(1,2,3,4,4,1));
 		
@@ -18,7 +18,8 @@ public class Controller
 				Arrays.asList(1,6,null,3,null,5));
 				
 		Beslissing b = new Beslissing(az,ra);
-		Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
+		Wegschrijven out = new Wegschrijven("D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/outfile.csv", b);
+		//Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
 		out.schrijfWeg();
 		
 		/*testen op testenopTijd en pasAan klasse Auto

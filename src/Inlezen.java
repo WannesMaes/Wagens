@@ -9,8 +9,8 @@ public class Inlezen
 	private static final int MINUTENINDAG = 1440;
 	public Inlezen()
 	{
-		//String filenaam = "D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/100_5_14_25.csv"
-		String filenaam = "C:/Users/Leen/Documents/School/MAIIW/AI/Cambio/100_5_14_25.csv";
+		String filenaam = "D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/100_5_14_25.csv";
+		//String filenaam = "C:/Users/Leen/Documents/School/MAIIW/AI/Cambio/100_5_14_25.csv";
         BufferedReader reader = null;
         String regel = "";
         Zone startZone = null;
@@ -55,7 +55,7 @@ public class Inlezen
             			pen1 = Integer.parseInt(nieuweAanvraag[6]);	//Niet toegewezen
             			pen2 = Integer.parseInt(nieuweAanvraag[7]);	//Aanliggende zone
             			Reservatie r = new Reservatie(i,nzone,ndag,nstTijd,ndtijd,nAutoIDs,pen1,pen2);
-            			System.out.println(r);
+            			//System.out.println(r);
             			this.getReservaties().add(r);
             		}
             	}
@@ -81,7 +81,7 @@ public class Inlezen
             				nZoneIDs.add(Integer.parseInt(aanliggendeZones[j].substring(1)));
             			}
             			Zone z = new Zone(zoneID,nZoneIDs);
-            			System.out.println(z);
+            			//System.out.println(z);
             			this.getZones().add(z);
             			//Midden zone voor initiele oplossing
             			if(aantalZones/2 == i)
@@ -102,7 +102,7 @@ public class Inlezen
             			//Auto regel inlezen
             			regel = reader.readLine();
             			Auto a = new Auto(Integer.parseInt(regel.substring(3)),startZone);
-            			System.out.println(a);
+            			//System.out.println(a);
             			this.getAutos().add(a);
             		}
             	}

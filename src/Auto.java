@@ -4,7 +4,7 @@ public class Auto
 {
 	private int aid;	//Het unieke id nr
 	private Zone zone;	//De toegewezen zone aan de auto
-	private ArrayList<Integer[]> tijdsloten;
+	private ArrayList<Integer[]> tijdsloten;	//Hierin zitten koppels van gereserveerde tijden (starttijd,eindtijd)
 	
 	public Auto(int id) 
 	{
@@ -52,18 +52,19 @@ public class Auto
 	public void setTijdsloten(ArrayList<Integer[]> tijdsloten) {
 		this.tijdsloten = tijdsloten;
 	}
+	//Doel: nakijken of de auto op een bepaald tijdslot nog vrij is.
 	public Boolean testenopTijd(int startTijd, int duurTijd) {
 		int startTijdgeg;
 		int eindTijdgeg;
 		int eindTijd = startTijd + duurTijd;
 		
-		for(int i=0; i<tijdsloten.size();i++) {
-			startTijdgeg = tijdsloten.get(i)[0];
-			eindTijdgeg = tijdsloten.get(i)[1];
+		for(int i=0; i<this.getTijdsloten().size();i++) {
+			startTijdgeg = this.getTijdsloten().get(i)[0];
+			eindTijdgeg = this.getTijdsloten().get(i)[1];
 			if(startTijd< startTijdgeg && eindTijd < eindTijdgeg) { //gaat alleen als arraylist chronologisch gesorteerd wordt)
 				return true;
 			}
-			if(startTijd >= eindTijdgeg) { 
+			if(startTijd >= eindTijdgeg) { //Op naar volgend koppel
 				continue;
 			}
 			if(startTijd >= startTijdgeg) { //impliciet: startTijd is < eindTijdgeg
@@ -75,24 +76,40 @@ public class Auto
 		}
 		return true;
 	}
+	//Doel: het toevoegen van een tijdslot waarvan veronderstelt wordt dat het een vrij slot is.
 	public void pasAan(int startTijd, int duurTijd) {
 		int eindTijd = startTijd + duurTijd;
 		Integer[] array = new Integer[] {startTijd,eindTijd};
 		int startTijdgeg;
-		for(int i=0; i<tijdsloten.size();i++) {
-			startTijdgeg = tijdsloten.get(i)[0];
+		for(int i=0; i<this.getTijdsloten().size();i++) {
+			startTijdgeg = this.getTijdsloten().get(i)[0];
 			if(startTijd <= startTijdgeg) {
+				//Heel die if is toch redundant door de lijn eronder?
 				if(i==0) {
-					tijdsloten.add(0,array);
+					this.getTijdsloten().add(0,array);
 					break;
 				}
-				tijdsloten.add(i,array);
+				this.getTijdsloten().add(i,array);
 				break;
 			}
-			if(i == tijdsloten.size()-1) {
-				tijdsloten.add(i+1,array);
+			if(i == this.getTijdsloten().size()-1) {
+				this.getTijdsloten().add(i+1,array);
 				break;
 			}
 		}
+		//Is dit niet efficienter?
+		/*
+		for(int i=0; i<this.getTijdsloten().size();i++) {
+			startTijdgeg = this.getTijdsloten().get(i)[0];
+			if(startTijd < startTijdgeg) {
+				this.getTijdsloten().add(i,array);
+				return;
+			}
+			if(i == this.getTijdsloten().size()-1) {
+				this.getTijdsloten().add(array);
+				return;
+			}
+		}
+		*/
 	}
 }
