@@ -184,7 +184,7 @@ public class Beslissing {
 		goed = auto.testenopTijd(reservatie.getStartTijd(),reservatie.getDuurTijd());
 		return goed;
 	}
-	public ArrayList<Integer> controleVeranderingAutoNaarRes(ArrayList<Integer> ra, int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst){
+	public ArrayList<Integer> controleVeranderingAutoNaarZone(ArrayList<Integer> ra, int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst){
 		for(int i=0;i<opl_ra.size();i++) {
 			if(opl_ra.get(i)==autoID) {
 				if(zoneID == reservatieLijst.get(i).getZone().getZid()) {
