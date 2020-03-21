@@ -190,7 +190,6 @@ public class Beslissing {
 		for(int i=0;i<opl_ra.size();i++) {
 			if(opl_ra.get(i)==autoID) {
 				if(zoneID == reservatieLijst.get(i).getZone().getZid()) {
-					//Hoe kom je hierin? Of wanneer roep je deze functie op? Ik snap hem niet echt? WM
 					//wnn auto in eigen zone zit, reservatie is ok
 					continue;
 				}

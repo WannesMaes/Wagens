@@ -53,6 +53,7 @@ public class Auto
 		this.tijdsloten = tijdsloten;
 	}
 	//Doel: nakijken of de auto op een bepaald tijdslot nog vrij is.
+	//Veronderstelling: this.getTijdsloten() is chronologisch geordend 
 	public Boolean testenopTijd(int startTijd, int duurTijd) {
 		int startTijdgeg;
 		int eindTijdgeg;
@@ -61,44 +62,22 @@ public class Auto
 		for(int i=0; i<this.getTijdsloten().size();i++) {
 			startTijdgeg = this.getTijdsloten().get(i)[0];
 			eindTijdgeg = this.getTijdsloten().get(i)[1];
-			if(startTijd< startTijdgeg && eindTijd < eindTijdgeg) { //gaat alleen als arraylist chronologisch gesorteerd wordt)
-				return true;
+			if(startTijd< startTijdgeg && eindTijd <= startTijdgeg) {
+				return true; //Tijdslot is geheel kleiner als het volgende
 			}
-			if(startTijd >= eindTijdgeg) { //Op naar volgend koppel
+			if(startTijd >= eindTijdgeg) { //Op naar het volgend koppel
 				continue;
 			}
-			if(startTijd >= startTijdgeg) { //impliciet: startTijd is < eindTijdgeg
-				return false;
-			}
-			if(eindTijd > startTijdgeg) { //impliciet: startTijd is < startTijdgeg
-				return false;
-			}
+			return false;
 		}
 		return true;
 	}
-	//Doel: het toevoegen van een tijdslot waarvan veronderstelt wordt dat het een vrij slot is.
+	//Doel: het toevoegen van een tijdslot
+	//Veronderstelling: het tijdslot is vrij
 	public void pasAan(int startTijd, int duurTijd) {
 		int eindTijd = startTijd + duurTijd;
 		Integer[] array = new Integer[] {startTijd,eindTijd};
 		int startTijdgeg;
-		for(int i=0; i<this.getTijdsloten().size();i++) {
-			startTijdgeg = this.getTijdsloten().get(i)[0];
-			if(startTijd <= startTijdgeg) {
-				//Heel die if is toch redundant door de lijn eronder?
-				if(i==0) {
-					this.getTijdsloten().add(0,array);
-					break;
-				}
-				this.getTijdsloten().add(i,array);
-				break;
-			}
-			if(i == this.getTijdsloten().size()-1) {
-				this.getTijdsloten().add(i+1,array);
-				break;
-			}
-		}
-		//Is dit niet efficienter?
-		/*
 		for(int i=0; i<this.getTijdsloten().size();i++) {
 			startTijdgeg = this.getTijdsloten().get(i)[0];
 			if(startTijd < startTijdgeg) {
@@ -110,6 +89,5 @@ public class Auto
 				return;
 			}
 		}
-		*/
 	}
 }
