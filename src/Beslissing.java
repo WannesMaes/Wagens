@@ -152,7 +152,7 @@ public class Beslissing {
 		this.setResEnAuto(beste_ra);
 		this.setKost(beste_kost);
 	}
-	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> az,ArrayList<Auto> autos) {
+	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> opl_az,ArrayList<Auto> autos) {
 		Reservatie reservatie=reservatieLijst.get(resID);
 		Boolean goed=false;
 		//kijken of de auto in de autolijst van res zit
@@ -164,12 +164,12 @@ public class Beslissing {
 		}
 		if(goed==false) return goed;
 		//testen of auto aanliggende zone is of eigen zone
-		if(az.get(autoID) == reservatie.getZone().getZid()) {
+		if(opl_az.get(autoID) == reservatie.getZone().getZid()) {
 			goed=true;
 		}
 		else {
 			for(int j=0;j<reservatie.getZone().getAzone().size();j++) {
-				if(reservatie.getZone().getAzone().get(j)==az.get(autoID)) {
+				if(reservatie.getZone().getAzone().get(j)==opl_az.get(autoID)) {
 					goed=true;
 					break;
 				}
@@ -183,5 +183,23 @@ public class Beslissing {
 		Auto auto=autos.get(autoID);
 		goed = auto.testenopTijd(reservatie.getStartTijd(),reservatie.getDuurTijd());
 		return goed;
+	}
+	public ArrayList<Integer> controleVeranderingAutoNaarRes(ArrayList<Integer> ra, int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst){
+		for(int i=0;i<opl_ra.size();i++) {
+			if(opl_ra.get(i)==autoID) {
+				if(zoneID == reservatieLijst.get(i).getZone().getZid()) {
+					//wnn auto in eigen zone zit, reservatie is ok
+					continue;
+				}
+				for(int j=0;j<reservatieLijst.get(i).getZone().getAzone().size();j++) {
+					//kijken naar aanliggende zones
+					if(zoneID==reservatieLijst.get(i).getZone().getAzone().get(i)) {
+						return opl_ra;
+					}
+				}
+				opl_ra.set(i,null); //reservatie kan niet meer toegewezen worden aan deze auto in de nieuwe zone
+			}
+		}
+		return opl_ra;
 	}
 }
