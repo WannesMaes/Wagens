@@ -91,9 +91,16 @@ public class Auto
 		}
 	}
 	//Doel: het verwijderen van een bepaald tijdslot
-	//Veronderstelling: 
-	public void verwijderTijdslot(int startTijd, int duurTijd)
+	//Veronderstelling: er zijn geen tijdsloten met dezelfde startTijd
+	public void verwijderTijdslot(int startTijd)
 	{
-		int eindTijd = startTijd + duurTijd;
+		for(int i=0;i<this.getTijdsloten().size();i++)
+		{
+			if(startTijd == this.getTijdsloten().get(i)[0])
+			{
+				this.getTijdsloten().remove(i);
+				return;
+			}
+		}
 	}
 }
