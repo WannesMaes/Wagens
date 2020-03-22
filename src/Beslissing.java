@@ -80,7 +80,7 @@ public class Beslissing {
 				continue;
 			}
 			toegewezenAutoID = ra.get(i);
-			System.out.println("dddd"+toegewezenAutoID+"hgfds"+az.size()+"  R.size() "+ra.size());
+			//System.out.println("dddd"+toegewezenAutoID+"hgfds"+az.size()+"  R.size() "+ra.size());
 			
 			toegewezenZoneID = az.get(toegewezenAutoID);
 			
@@ -120,6 +120,7 @@ public class Beslissing {
 			autoID = random.nextInt(aantAuto); 
 			zoneID = random.nextInt(aantalZones);
 			opl_az = veranderZoneVanAuto(opl_az, autoID, zoneID);
+			System.out.println("AZ aanpassing:" + opl_az);
 					
 			//FEASIBLE CHECK : daarna pas kost berekenen
 			opl_ra = this.controleVeranderingAutoNaarZone(autoID, zoneID,opl_ra,reservatieLijst, autoLijst.get(autoID));// controle geen slechte reservaties (weghalen)
@@ -188,51 +189,14 @@ public class Beslissing {
 		//start - initiele opl + beste + kosten
 		ArrayList<Integer> opl_ra = (ArrayList<Integer>)this.getResEnAuto().clone();
 		ArrayList<Integer> opl_az = (ArrayList<Integer>)this.getAutoEnZone().clone();
-		opl_ra = controleVoorNieuweResevaties(opl_ra, opl_az, reservatieLijst, autoLijst);
-//		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
-//		
+		opl_ra = controleVoorNieuweResevaties(opl_ra, opl_az, reservatieLijst, autoLijst);	
 		
+		System.out.println("INITIEEL opl_ra: "+ opl_ra + '\n' + "opl_az" +opl_az+ '\n'  );
 		this.randomVeranderZoneVanAuto(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
+		System.out.println("NA AZ AANPASSINGEN:  opl_ra: "+ opl_ra + '\n' + "opl_az" +opl_az+ '\n'  );
 		this.randomVeranderAutoVanReservatie(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
+		System.out.println("NA RA AANPASSINGEN: opl_ra: "+ opl_ra + '\n'+ "opl_az"+opl_az+ '\n' );
 		
-		/*onderstaande mag weg als apparte functies werken*/
-		/*int autoID, zoneID, resID;
-		int aantRes = opl_ra.size();
-		int aantAuto= opl_az.size();
-		Random random = new Random(); //voor random nieuwe oplossing te zoeken
-		
-		//zoek nieuwe oplossing mbv veranderzone en verander auto van reservatie
-		//VERANDER AUTO VAN ZONE + GROOTSTE INVLOED
-		for(int k=0; k<AANTAL_AZ; k++) {
-			autoID = random.nextInt(aantAuto); 
-			zoneID = random.nextInt(aantalZones); 
-			opl_az = veranderZoneVanAuto(opl_az, autoID, zoneID);
-			
-			//FEASIBLE CHECK : nog checken van tijden en van aanliggende zones??? daarna pas kost berekenen
-			//Hier moet volgens mij(Wannes) ook nog de verandering van de ra lijst komen die volgt op de zoneverandering
-			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
-			if(opl_kost < this.getKost()) {
-				this.setAutoEnZone(opl_az);
-				this.setResEnAuto(opl_ra);
-				this.setKost(opl_kost);
-			}
-		}*/
-		
-		/*/VERANDER AUTO - RESERVATIE  + KLEINE INVLOED
-		opl_ra =(ArrayList<Integer>)this.getResEnAuto().clone() ; // voor  eerste lus
-		for(int j=0; j<AANTAL_RA; j++) {
-			resID = random.nextInt(aantRes);
-			autoID = random.nextInt(aantAuto);
-			opl_ra = veranderAutoVanReservatie(opl_ra, resID, autoID); 
-			
-			//FEASIBLE CHECK : nog checken van tijden en van aanliggende zones??? daarna pas kost berekenen
-			opl_kost = berekenKost(opl_ra, this.getAutoEnZone(),reservatieLijst);
-			if(opl_kost < this.getKost()) {		
-				this.setAutoEnZone(opl_az);
-				this.setResEnAuto(opl_ra);
-				this.setKost(opl_kost);
-			}
-		}*/
 	}
 	//Doel: nakijken of de wijziging van auto1 naar auto2 in de reservatie wel mogelijk is (auto, zone, tijd).
 	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> opl_az,Auto auto) {
@@ -270,11 +234,11 @@ public class Beslissing {
 	public ArrayList<Integer> controleVeranderingAutoNaarZone(int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst, Auto auto){
 		boolean gevonden=false;
 		for(int i=0;i<opl_ra.size();i++) {
-			System.out.println("Hier "+i);
-			System.out.println(opl_ra.size());
+			//System.out.println("Hier "+i);
+			//System.out.println(opl_ra.size());
 			if(opl_ra.get(i)==null)
 			{
-				System.out.println("Skip "+i);
+				//System.out.println("Skip "+i);
 			}
 			else {
 				
