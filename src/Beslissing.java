@@ -76,6 +76,7 @@ public class Beslissing {
 			//check of de reservatie een auto heeft toegewezen gekregen (zoniet -> penalty1 en ga naar volgende iteratie
 			if(ra.get(i) == null) {
 				kost += reservatieLijst.get(i).getPenalty1();
+				//System.out.println("Kost op tellend: " + kost);
 				continue;
 			}
 			toegewezenAutoID = ra.get(i);
@@ -104,7 +105,11 @@ public class Beslissing {
 	}
 	
 	public void randomVeranderZoneVanAuto(ArrayList<Integer> opl_ra, ArrayList<Integer> opl_az, ArrayList<Reservatie> reservatieLijst, int aantalZones , ArrayList<Auto> autoLijst) {
+		//Initiele oplossing kost - doorgeven aan atribuut
 		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
+		this.setKost(opl_kost);
+		System.out.println("Kost Initieel " + opl_kost);
+		
 		int autoID, zoneID;
 		int aantAuto= opl_az.size();
 		ArrayList<Integer> opl_az_oude = opl_az;
