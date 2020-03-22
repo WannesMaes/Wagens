@@ -152,7 +152,7 @@ public class Beslissing {
 		this.setKost(beste_kost);
 	}
 	//Doel: nakijken of de wijziging van auto1 naar auto2 in de reservatie wel mogelijk is (auto, zone, tijd).
-	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> opl_az,ArrayList<Auto> autos) {
+	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> opl_az,Auto auto) {
 		Reservatie reservatie=reservatieLijst.get(resID);
 		Boolean goed=false;
 		//Testen of de auto in de autolijst van res zit (mag die auto wel?)
@@ -181,9 +181,7 @@ public class Beslissing {
 		if(goed==false) 
 			return false; //De auto staat niet geparkeerd in een gewenste of aanliggende zone en de verandering mag dus niet plaatsvinden
 		//Testen of de auto nog vrij is op de gewenste tijden
-		Auto auto=autos.get(autoID); //Waarom niet enkel die auto doorgeven in functie?
-		goed = auto.testenopTijd(reservatie.getStartTijd(),reservatie.getDuurTijd());
-		return goed;
+		return auto.testenopTijd(reservatie.getStartTijd(),reservatie.getDuurTijd());
 	}
 	//Doel: nakijken of de verplaatsing van de auto van zone1 naar zone2 geen onmogelijke reservaties laat staan
 	public ArrayList<Integer> controleVeranderingAutoNaarZone(ArrayList<Integer> ra, int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst){
