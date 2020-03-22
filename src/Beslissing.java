@@ -2,7 +2,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 public class Beslissing {
-	
+	//verandering?
 	private ArrayList<Integer> autoEnZoneBeste;	// autoEnZone.length = aantal auto's en ingevuld met de toegewezen zones aan die auto(zone nummers zonder 'z')
 	private ArrayList<Integer> resEnAutoBeste;	// resEnAuto.length = aantal reservaties en ingevuld met de toegewezen auto's aan die reservatie (zonder 'car')
 	private int kostBeste = 0;
