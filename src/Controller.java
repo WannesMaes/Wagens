@@ -11,13 +11,27 @@ public class Controller
 		System.out.println(in.getReservaties());
 		System.out.println(in.getZones());
 		System.out.println("File succesvol ingelezen en verwerkt.\n\n");
-		ArrayList<Integer> az = new ArrayList<Integer>(
-				Arrays.asList(1,2,3,4,4,1));
-		
-		ArrayList<Integer> ra = new ArrayList<Integer>(
-				Arrays.asList(1,6,null,3,null,5));
-				
+//		ArrayList<Integer> az = new ArrayList<Integer>(
+//				Arrays.asList(1,2,3,4,4,1));
+//		
+//		ArrayList<Integer> ra = new ArrayList<Integer>(
+//				Arrays.asList(1,6,null,3,null,5));
+//				
+		ArrayList<Integer> az = new ArrayList<Integer>();
+		for(int i=0;i<in.getAutos().size();i++)
+		{
+			az.add(in.getAutos().get(i).getZone().getZid());
+		}
+		System.out.println(az);
+		ArrayList<Integer> ra = new ArrayList<Integer>(in.getReservaties().size());
+		for(int i=0;i<in.getReservaties().size();i++)
+		{
+			ra.add(null);
+		}
+		//Collections.fill(ra,null);
 		Beslissing b = new Beslissing(az,ra);
+		System.out.println(ra);
+		b.localSearch(in.getReservaties(), in.getZones().size(), in.getAutos());
 		Wegschrijven out = new Wegschrijven("D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/outfile.csv", b);
 		//Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
 		out.schrijfWeg();

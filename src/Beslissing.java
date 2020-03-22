@@ -73,13 +73,14 @@ public class Beslissing {
 		//check of het in de aanliggende zone zit voor alle reservaties
 		for(int i=0; i<reservatieLijst.size(); i++) {
 			gewensteZoneID = reservatieLijst.get(i).getZone().getZid();
-			
 			//check of de reservatie een auto heeft toegewezen gekregen (zoniet -> penalty1 en ga naar volgende iteratie
 			if(ra.get(i) == null) {
 				kost += reservatieLijst.get(i).getPenalty1();
 				continue;
 			}
 			toegewezenAutoID = ra.get(i);
+			System.out.println("dddd"+toegewezenAutoID+"hgfds"+az.size()+"  R.size() "+ra.size());
+			
 			toegewezenZoneID = az.get(toegewezenAutoID);
 			
 			// Aangenomen dat toegewezen zone een aanliggende zone is
@@ -182,8 +183,9 @@ public class Beslissing {
 		//start - initiele opl + beste + kosten
 		ArrayList<Integer> opl_ra = (ArrayList<Integer>)this.getResEnAuto().clone();
 		ArrayList<Integer> opl_az = (ArrayList<Integer>)this.getAutoEnZone().clone();
-		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
-		
+		opl_ra = controleVoorNieuweResevaties(opl_ra, opl_az, reservatieLijst, autoLijst);
+//		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
+//		
 		
 		this.randomVeranderZoneVanAuto(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
 		this.randomVeranderAutoVanReservatie(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
@@ -263,26 +265,36 @@ public class Beslissing {
 	public ArrayList<Integer> controleVeranderingAutoNaarZone(int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst, Auto auto){
 		boolean gevonden=false;
 		for(int i=0;i<opl_ra.size();i++) {
-			if(opl_ra.get(i)==autoID) {
-				if(zoneID == reservatieLijst.get(i).getZone().getZid()) {
-					//wnn auto in eigen zone zit, reservatie is ok
-					continue;
-				}
-				for(int j=0;j<reservatieLijst.get(i).getZone().getAzone().size();j++) {
-					//kijken naar aanliggende zones
-					if(zoneID==reservatieLijst.get(i).getZone().getAzone().get(i)) {
-						gevonden=true;
-						break;
+			System.out.println("Hier "+i);
+			System.out.println(opl_ra.size());
+			if(opl_ra.get(i)==null)
+			{
+				System.out.println("Skip "+i);
+			}
+			else {
+				
+			
+				if(opl_ra.get(i)==autoID) {
+					if(zoneID == reservatieLijst.get(i).getZone().getZid()) {
+						//wnn auto in eigen zone zit, reservatie is ok
+						continue;
 					}
-				}
-				if(gevonden)
-				{
-					gevonden=false;
-				}
-				else
-				{
-					auto.verwijderTijdslot(reservatieLijst.get(i).getStartTijd());
-					opl_ra.set(i,null); //reservatie kan niet meer toegewezen worden aan deze auto in de nieuwe zone
+					for(int j=0;j<reservatieLijst.get(i).getZone().getAzone().size();j++) {
+						//kijken naar aanliggende zones
+						if(zoneID==reservatieLijst.get(i).getZone().getAzone().get(i)) {
+							gevonden=true;
+							break;
+						}
+					}
+					if(gevonden)
+					{
+						gevonden=false;
+					}
+					else
+					{
+						auto.verwijderTijdslot(reservatieLijst.get(i).getStartTijd());
+						opl_ra.set(i,null); //reservatie kan niet meer toegewezen worden aan deze auto in de nieuwe zone
+					}
 				}
 			}
 		}
