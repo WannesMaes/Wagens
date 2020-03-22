@@ -184,7 +184,8 @@ public class Beslissing {
 		return auto.testenopTijd(reservatie.getStartTijd(),reservatie.getDuurTijd());
 	}
 	//Doel: nakijken of de verplaatsing van de auto van zone1 naar zone2 geen onmogelijke reservaties laat staan
-	public ArrayList<Integer> controleVeranderingAutoNaarZone(ArrayList<Integer> ra, int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst){
+	public ArrayList<Integer> controleVeranderingAutoNaarZone(ArrayList<Integer> ra, int autoID, int zoneID,ArrayList<Integer> opl_ra, ArrayList<Reservatie> reservatieLijst, Auto auto){
+		boolean gevonden=false;
 		for(int i=0;i<opl_ra.size();i++) {
 			if(opl_ra.get(i)==autoID) {
 				if(zoneID == reservatieLijst.get(i).getZone().getZid()) {
@@ -194,11 +195,16 @@ public class Beslissing {
 				for(int j=0;j<reservatieLijst.get(i).getZone().getAzone().size();j++) {
 					//kijken naar aanliggende zones
 					if(zoneID==reservatieLijst.get(i).getZone().getAzone().get(i)) {
-						return opl_ra;
+						gevonden=true;
+						break;
 					}
 				}
-				//Hier moet nog de verwijdering van het tijdslot bijkomen
-				opl_ra.set(i,null); //reservatie kan niet meer toegewezen worden aan deze auto in de nieuwe zone
+				if(!gevonden)
+				{
+					auto.verwijderTijdslot(reservatieLijst.get(i).getStartTijd());
+					opl_ra.set(i,null); //reservatie kan niet meer toegewezen worden aan deze auto in de nieuwe zone
+					gevonden=false;
+				}
 			}
 		}
 		return opl_ra;
