@@ -136,25 +136,28 @@ public class Inlezen
 	{
 		return autos;
 	}
+	@SuppressWarnings("unchecked")
 	public void setAutos(ArrayList<Auto> a)
 	{
-		autos = a;
+		autos = (ArrayList<Auto>)a.clone();
 	}
 	public ArrayList<Reservatie> getReservaties()
 	{
 		return reservaties;
 	}
+	@SuppressWarnings("unchecked")
 	public void setReservaties(ArrayList<Reservatie> r)
 	{
-		reservaties = r;
+		reservaties = (ArrayList<Reservatie>)r.clone();
 	}
 	public ArrayList<Zone> getZones()
 	{
 		return zones;
 	}
+	@SuppressWarnings("unchecked")
 	public void setZones(ArrayList<Zone>z)
 	{
-		zones = z;
+		zones = (ArrayList<Zone>)z.clone();
 	}
 
 }

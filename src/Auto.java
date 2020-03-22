@@ -18,11 +18,12 @@ public class Auto
 		zone = z;
 		tijdsloten = new ArrayList<Integer[]>();
 	}
+	@SuppressWarnings("unchecked")
 	public Auto(int auto, Zone z, ArrayList<Integer[]> tijd) 
 	{
 		aid = auto;
 		zone = z;
-		tijdsloten=tijd;
+		tijdsloten=(ArrayList<Integer[]>)tijd.clone();
 	}
 	
 	public void setZone(Zone z) 
@@ -49,8 +50,9 @@ public class Auto
 	public ArrayList<Integer[]> getTijdsloten() {
 		return tijdsloten;
 	}
+	@SuppressWarnings("unchecked")
 	public void setTijdsloten(ArrayList<Integer[]> tijdsloten) {
-		this.tijdsloten = tijdsloten;
+		this.tijdsloten = (ArrayList<Integer[]>)tijdsloten.clone();
 	}
 	//Doel: nakijken of de auto op een bepaald tijdslot nog vrij is.
 	//Veronderstelling: this.getTijdsloten() is chronologisch geordend 
