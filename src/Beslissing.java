@@ -199,11 +199,14 @@ public class Beslissing {
 						break;
 					}
 				}
-				if(!gevonden)
+				if(gevonden)
+				{
+					gevonden=false;
+				}
+				else
 				{
 					auto.verwijderTijdslot(reservatieLijst.get(i).getStartTijd());
 					opl_ra.set(i,null); //reservatie kan niet meer toegewezen worden aan deze auto in de nieuwe zone
-					gevonden=false;
 				}
 			}
 		}
@@ -217,14 +220,13 @@ public class Beslissing {
 	//		- in r (reservatielijst) steken alle ingelezen gegevens die bij die reservatie horen op volgorde van reservatienr
 	public ArrayList<Integer> controleVoorNieuweResevaties(ArrayList<Integer> ra, ArrayList<Integer> az, ArrayList<Reservatie> r, ArrayList<Auto> autos)
 	{
-		int penalty=10000;
-		int auto=0; //Optie 1: auto bevat autonr, Optie 2: auto bevat 0 of 1 (niet gevonden,wel gevonden)
+		boolean gevonden = false;
 		for(int i=0;i<ra.size();i++)
 		{
 			//Enkel de lege reservaties nakijken
 			if(ra.get(i)==null)
 			{
-				//Testen welke auto's mogen en welke de laagste penalty heeft (optie 1)
+				//Testen of er een auto in de juiste zone staat en vrij is op dat tijdslot
 				for(int j=0;j<r.get(i).getAutoIDs().size();j++)
 				{
 					//Testen of die auto in de gewenste zone staat
@@ -233,49 +235,36 @@ public class Beslissing {
 						//Testen of het tijdslot past
 						if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
 						{
-							penalty=10000;
 							ra.set(i,j);
+							gevonden=true;
 							break; //Op naar de volgende reservatie
 						}
 					}
-					//Testen of die auto in een aanliggende zone staat
-					for(int k=0;k<r.get(i).getZone().getAzone().size();k++)
+				}
+				//Testen of er een auto in een aanliggende zone staat omdat er geen in de juiste staat
+				if (!gevonden)
+				{
+					for(int j=0;j<r.get(i).getAutoIDs().size();j++)
 					{
-						//Twee mogelijkheden:
-						//	- We zoeken verder voor een eventuele beter toewijzing (tijd=langer,res=beter)
-						//	- We aanvaarden deze oplossing (tijd=korter,res=slechter)
-						if(r.get(i).getZone().getAzone().get(k)==az.get(j))
+						//Testen of die auto in een aanliggende zone staat
+						for(int k=0;k<r.get(i).getZone().getAzone().size();k++)
 						{
-							//Optie 1:
-							if(r.get(i).getPenalty1()<penalty)
+							if(r.get(i).getZone().getAzone().get(k)==az.get(j))
 							{
 								//Testen of het tijdslot past
 								if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
 								{
-									penalty=r.get(i).getPenalty1();
-									auto=j;
+									gevonden=true;
+									ra.set(i, j);
+									break;
 								}
 							}
-							//Optie 2:
-							//Testen of het tijdslot past
-//							if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
-//							{
-//								auto=1;
-//								ra.set(i, j);
-//								break;
-//							}
+						}
+						if(gevonden)
+						{
+							break;
 						}
 					}
-					//Optie 2:
-//					if(auto==1)
-//					{
-//						break;
-//					}
-				}
-				//Optie 1:
-				if(penalty!=10000)
-				{
-					ra.set(i, auto);
 				}
 			}
 		}
