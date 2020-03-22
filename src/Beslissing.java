@@ -199,9 +199,85 @@ public class Beslissing {
 						return opl_ra;
 					}
 				}
+				//Hier moet nog de verwijdering van het tijdslot bijkomen
 				opl_ra.set(i,null); //reservatie kan niet meer toegewezen worden aan deze auto in de nieuwe zone
 			}
 		}
 		return opl_ra;
+	}
+	//Doel: nakijken of er door de verandering geen niet toegewezen reservaties, wel toegewezen kunnen worden
+	//Veronderstellingen: 
+	//		- autonr en reservatienr zijn index van az en ra
+	//		- als reservatie niet toegewezen is, dan is op de respectievelijke index de waarde null
+	//		- als reservatie wel toegewezen is dan is het een mogelijke reservatie
+	//		- in r (reservatielijst) steken alle ingelezen gegevens die bij die reservatie horen op volgorde van reservatienr
+	public ArrayList<Integer> controleVoorNieuweResevaties(ArrayList<Integer> ra, ArrayList<Integer> az, ArrayList<Reservatie> r, ArrayList<Auto> autos)
+	{
+		int penalty=10000;
+		int auto=0; //Optie 1: auto bevat autonr, Optie 2: auto bevat 0 of 1 (niet gevonden,wel gevonden)
+		for(int i=0;i<ra.size();i++)
+		{
+			//Enkel de lege reservaties nakijken
+			if(ra.get(i)==null)
+			{
+				//Testen welke auto's mogen en welke de laagste penalty heeft (optie 1)
+				for(int j=0;j<r.get(i).getAutoIDs().size();j++)
+				{
+					//Testen of die auto in de gewenste zone staat
+					if(r.get(i).getZone().getZid()==az.get(r.get(i).getAutoIDs().get(j)))
+					{
+						//Testen of het tijdslot past
+						if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
+						{
+							penalty=10000;
+							ra.set(i,j);
+							break; //Op naar de volgende reservatie
+						}
+						
+					}
+					//Testen of die auto in een aanliggende zone staat
+					for(int k=0;k<r.get(i).getZone().getAzone().size();k++)
+					{
+						//Twee mogelijkheden:
+						//	- We zoeken verder voor een eventuele beter toewijzing (tijd=langer,res=beter)
+						//	- We aanvaarden deze oplossing (tijd=korter,res=slechter)
+						if(r.get(i).getZone().getAzone().get(k)==az.get(j))
+						{
+							//Optie 1:
+							if(r.get(i).getPenalty1()<penalty)
+							{
+								//Testen of het tijdslot past
+								if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
+								{
+									penalty=r.get(i).getPenalty1();
+									auto=j;
+								}
+							}
+							//Optie 2:
+							//Testen of het tijdslot past
+							if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
+							{
+								auto=1;
+								ra.set(i, j);
+								break;
+							}
+							
+							
+						}
+					}
+					//Optie 2:
+//					if(auto==1)
+//					{
+//						break;
+//					}
+				}
+				//Optie 1:
+				if(penalty!=10000)
+				{
+					ra.set(i, auto);
+				}
+			}
+		}
+		return ra;
 	}
 }

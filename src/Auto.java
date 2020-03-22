@@ -90,4 +90,10 @@ public class Auto
 			}
 		}
 	}
+	//Doel: het verwijderen van een bepaald tijdslot
+	//Veronderstelling: 
+	public void verwijderTijdslot(int startTijd, int duurTijd)
+	{
+		int eindTijd = startTijd + duurTijd;
+	}
 }

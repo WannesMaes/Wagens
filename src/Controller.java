@@ -22,7 +22,8 @@ public class Controller
 		//Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
 		out.schrijfWeg();
 		
-		/*testen op testenopTijd en pasAan klasse Auto
+		/*
+		//testen op testenopTijd en pasAan klasse Auto
 		Zone z = new Zone(1);
 		Auto auto = new Auto(1,z);
 		ArrayList<Integer[]> tijdsloten = new ArrayList<Integer[]>();
@@ -71,7 +72,8 @@ public class Controller
 			startTijdgeg = tijdsloten.get(i)[0];
 			eindTijdgeg = tijdsloten.get(i)[1];
 			System.out.println("tijden" +i+ "(" + startTijdgeg +","+ eindTijdgeg+")");
-		}*/
+		}
+		*/
 	}
 	public static void main(String[] args) 
 	{

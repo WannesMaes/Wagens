@@ -21,8 +21,7 @@ public class Inlezen
             //Starten met het bestand in te lezen
         	while ((regel = reader.readLine()) != null) 
             {
-        		//Deel 1: de aanvragen van auto;s
-            	if(regel.contains("Requests"))
+        		if(regel.contains("Requests"))
             	{
             		//Inlezen van het getal
             		String[] aanvragen = regel.split(" ");
