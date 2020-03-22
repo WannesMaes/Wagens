@@ -35,9 +35,10 @@ public class Zone
 	{
 		return azone;
 	}
+	@SuppressWarnings("unchecked")
 	public void setAzone(ArrayList<Integer> zones)
 	{
-		azone = zones;
+		azone = (ArrayList<Integer>)zones.clone();
 	}
 	//Andere functies
 	public void addAzone(int zone)

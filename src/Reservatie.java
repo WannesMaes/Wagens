@@ -11,13 +11,14 @@ public class Reservatie {
 	private ArrayList<Integer> autoIDs;
 	private int penalty1;
 	private int penalty2;
+	@SuppressWarnings("unchecked")
 	public Reservatie(int nid, Zone nzone, int ndag, int nstTijd, int ndtijd, ArrayList<Integer> nautoIDs, int pen1, int pen2) {
 		id = nid;
 		zone = nzone;
 		dag = ndag;
 		startTijd = nstTijd;
 		duurTijd = ndtijd;
-		autoIDs = nautoIDs;
+		autoIDs = (ArrayList<Integer>)nautoIDs.clone();
 		penalty1 = pen1;
 		penalty2 = pen2;
 	}
@@ -54,8 +55,9 @@ public class Reservatie {
 	public ArrayList<Integer> getAutoIDs() {
 		return autoIDs;
 	}
+	@SuppressWarnings("unchecked")
 	public void setautoIDs(ArrayList<Integer> AutoIDs) {
-		this.autoIDs = AutoIDs;
+		this.autoIDs = (ArrayList<Integer>)AutoIDs.clone();
 	}
 	public int getPenalty1() {
 		return penalty1;
