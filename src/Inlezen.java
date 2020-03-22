@@ -10,7 +10,8 @@ public class Inlezen
 	public Inlezen()
 	{
 		//String filenaam = "D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/100_5_14_25.csv";
-		String filenaam = "C:/Users/Leen/Documents/School/MAIIW/Sem2/AI/Cambio/100_5_14_25.csv";
+		//String filenaam = "C:/Users/Leen/Documents/School/MAIIW/Sem2/AI/Cambio/100_5_14_25.csv";
+		String filenaam = "C:\\Users\\Birte\\OneDrive\\Documenten\\De Nayer\\Master\\semester 2\\AI Labo\\100_5_14_25.csv";
         BufferedReader reader = null;
         String regel = "";
         Zone startZone = null;

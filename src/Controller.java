@@ -33,7 +33,8 @@ public class Controller
 		System.out.println(ra);
 		b.localSearch(in.getReservaties(), in.getZones().size(), in.getAutos());
 		//Wegschrijven out = new Wegschrijven("D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/outfile.csv", b);
-		Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
+		//Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
+		Wegschrijven out = new Wegschrijven("C:\\Users\\Birte\\OneDrive\\Documenten\\De Nayer\\Master\\semester 2\\AI Labo\\outfile.csv",b);
 		out.schrijfWeg();
 		
 		/*
