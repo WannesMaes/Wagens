@@ -233,7 +233,6 @@ public class Beslissing {
 							ra.set(i,j);
 							break; //Op naar de volgende reservatie
 						}
-						
 					}
 					//Testen of die auto in een aanliggende zone staat
 					for(int k=0;k<r.get(i).getZone().getAzone().size();k++)
@@ -255,14 +254,12 @@ public class Beslissing {
 							}
 							//Optie 2:
 							//Testen of het tijdslot past
-							if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
-							{
-								auto=1;
-								ra.set(i, j);
-								break;
-							}
-							
-							
+//							if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
+//							{
+//								auto=1;
+//								ra.set(i, j);
+//								break;
+//							}
 						}
 					}
 					//Optie 2:
