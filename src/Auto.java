@@ -80,15 +80,22 @@ public class Auto
 		int eindTijd = startTijd + duurTijd;
 		Integer[] array = new Integer[] {startTijd,eindTijd};
 		int startTijdgeg;
-		for(int i=0; i<this.getTijdsloten().size();i++) {
-			startTijdgeg = this.getTijdsloten().get(i)[0];
-			if(startTijd < startTijdgeg) {
-				this.getTijdsloten().add(i,array);
-				return;
-			}
-			if(i == this.getTijdsloten().size()-1) {
-				this.getTijdsloten().add(array);
-				return;
+		if(this.getTijdsloten().size()==0)
+		{
+			this.getTijdsloten().add(array);
+		}
+		else
+		{
+			for(int i=0; i<this.getTijdsloten().size();i++) {
+				startTijdgeg = this.getTijdsloten().get(i)[0];
+				if(startTijd < startTijdgeg) {
+					this.getTijdsloten().add(i,array);
+					return;
+				}
+				if(i == this.getTijdsloten().size()-1) {
+					this.getTijdsloten().add(array);
+					return;
+				}
 			}
 		}
 	}

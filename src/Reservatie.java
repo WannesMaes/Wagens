@@ -73,6 +73,6 @@ public class Reservatie {
 	}
 	public String toString()
 	{
-		return "Request met ID: "+this.getId()+" met gevraagde zone: "+this.getZone().getZid();
+		return "Request met ID: "+this.getId()+" met gevraagde zone: "+this.getZone().getZid()+" met aanliggende zones "+this.getZone().getAzone();
 	}
 }

@@ -9,9 +9,8 @@ public class Inlezen
 	private static final int MINUTENINDAG = 1440;
 	public Inlezen()
 	{
-		//String filenaam = "D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/100_5_14_25.csv";
-		//String filenaam = "C:/Users/Leen/Documents/School/MAIIW/Sem2/AI/Cambio/100_5_14_25.csv";
-		String filenaam = "100_5_14_25.csv";
+		//String filenaam = "100_5_14_25.csv";
+		String filenaam = "360_5_71_25.csv";
         BufferedReader reader = null;
         String regel = "";
         Zone startZone = null;
@@ -113,7 +112,7 @@ public class Inlezen
         }
         catch (IOException e) 
         {
-        	System.out.println("Juiste bestandpad opgeven");
+        	System.out.println("Juiste bestandpad opgeven!!!!!");
         	e.printStackTrace();
         }
         finally 
@@ -122,7 +121,13 @@ public class Inlezen
             {
                 try 
                 {
-                    reader.close();
+                    int zoneID;
+                	for(int i=0;i<this.getReservaties().size();i++) 
+                    {
+                    	zoneID = this.getReservaties().get(i).getZone().getZid();
+                    	this.getReservaties().get(i).getZone().setAzone(this.getZones().get(zoneID).getAzone());
+                    }
+                	reader.close();
                 } 
                 catch (IOException e) 
                 {
