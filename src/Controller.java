@@ -32,9 +32,10 @@ public class Controller
 		Beslissing b = new Beslissing(az,ra);
 		System.out.println(ra);
 		b.localSearch(in.getReservaties(), in.getZones().size(), in.getAutos());
-		Wegschrijven out = new Wegschrijven("D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/outfile.csv", b);
+		//Wegschrijven out = new Wegschrijven("D:/SynologyDrive/KU Leuven/Artificiële inteligentie/Wagen labo/Cambio/src/outfile.csv", b);
 		//Wegschrijven out = new Wegschrijven("C:/Users/Leen/Documents/School/outfile.csv", b);
 		//Wegschrijven out = new Wegschrijven("C:\\Users\\Birte\\OneDrive\\Documenten\\De Nayer\\Master\\semester 2\\AI Labo\\outfile.csv",b);
+		Wegschrijven out = new Wegschrijven("outfile.csv",b);
 		out.schrijfWeg();
 		
 		/*
@@ -92,7 +93,7 @@ public class Controller
 	}
 	public static void main(String[] args) 
 	{
-		System.out.println(args[0]);
+		//System.out.println(args[0]);
 		new Controller();
 
 	}
