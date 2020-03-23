@@ -124,7 +124,7 @@ public class Beslissing {
 					
 			//FEASIBLE CHECK : daarna pas kost berekenen
 			opl_ra = this.controleVeranderingAutoNaarZone(autoID, zoneID,opl_ra,reservatieLijst, autoLijst.get(autoID));// controle geen slechte reservaties (weghalen)
-			opl_ra = controleVoorNieuweResevaties(opl_ra, opl_az, reservatieLijst, autoLijst) ; // niet toegewezen kijken of die wel kunnen w toegewezen
+			opl_ra = controleVoorNieuweReservaties(opl_ra, opl_az, reservatieLijst, autoLijst) ; // niet toegewezen kijken of die wel kunnen w toegewezen
 						
 			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
 			if(opl_kost < this.getKost()) {
@@ -164,7 +164,7 @@ public class Beslissing {
 				int start = reservatieLijst.get(resID).getStartTijd();
 				int duur = reservatieLijst.get(resID).getDuurTijd();
 				autoLijst.get(autoID).pasAan(start, duur);
-				controleVoorNieuweResevaties(opl_ra, opl_az, reservatieLijst, autoLijst) ; // niet toegewezen kijken of die wel kunnen w toegewezen
+				controleVoorNieuweReservaties(opl_ra, opl_az, reservatieLijst, autoLijst) ; // niet toegewezen kijken of die wel kunnen w toegewezen
 				
 				opl_kost = berekenKost(opl_ra, this.getAutoEnZone(),reservatieLijst);
 				if(opl_kost < this.getKost()) {		
@@ -189,7 +189,7 @@ public class Beslissing {
 		//start - initiele opl + beste + kosten
 		ArrayList<Integer> opl_ra = (ArrayList<Integer>)this.getResEnAuto().clone();
 		ArrayList<Integer> opl_az = (ArrayList<Integer>)this.getAutoEnZone().clone();
-		opl_ra = controleVoorNieuweResevaties(opl_ra, opl_az, reservatieLijst, autoLijst);	
+		opl_ra = controleVoorNieuweReservaties(opl_ra, opl_az, reservatieLijst, autoLijst);	
 		
 		System.out.println("INITIEEL opl_ra: "+ opl_ra + '\n' + "opl_az" +opl_az+ '\n'  );
 		this.randomVeranderZoneVanAuto(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
@@ -275,7 +275,7 @@ public class Beslissing {
 	//		- als reservatie niet toegewezen is, dan is op de respectievelijke index de waarde null
 	//		- als reservatie wel toegewezen is dan is het een mogelijke reservatie
 	//		- in r (reservatielijst) steken alle ingelezen gegevens die bij die reservatie horen op volgorde van reservatienr
-	public ArrayList<Integer> controleVoorNieuweResevaties(ArrayList<Integer> ra, ArrayList<Integer> az, ArrayList<Reservatie> r, ArrayList<Auto> autos)
+	public ArrayList<Integer> controleVoorNieuweReservaties(ArrayList<Integer> ra, ArrayList<Integer> az, ArrayList<Reservatie> r, ArrayList<Auto> autos)
 	
 	{
 		boolean gevonden = false;
