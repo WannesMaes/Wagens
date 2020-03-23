@@ -200,6 +200,9 @@ public class Beslissing {
 		ArrayList<Integer> opl_az = (ArrayList<Integer>)this.getAutoEnZone().clone();
 		opl_ra = controleVoorNieuweReservaties(opl_ra, opl_az, reservatieLijst, autoLijst);	
 		this.setResEnAuto(opl_ra);
+		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
+		this.setKost(opl_kost);
+		
 		System.out.println("INITIEEL:  \n\topl_ra: "+ opl_ra + '\n' + "\topl_az: " +opl_az+ '\n'  );
 		this.randomVeranderZoneVanAuto(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
 		System.out.println("NA AZ AANPASSINGEN:  \n\topl_ra: "+ opl_ra + '\n' + "\topl_az: " +opl_az+ '\n'  );
