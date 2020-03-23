@@ -7,8 +7,8 @@ public class Beslissing {
 	private ArrayList<Integer> resEnAutoBeste;	// resEnAuto.length = aantal reservaties en ingevuld met de toegewezen auto's aan die reservatie (zonder 'car')
 	private int kostBeste = 0;
 	
-	private static int AANTAL_RA = 100; // later eventueel als argument in 
-	private static int AANTAL_AZ = 100;
+	private static int AANTAL_RA = 200; // later eventueel als argument in 
+	private static int AANTAL_AZ = 0;
 	
 	public Beslissing() {}
 	
@@ -189,8 +189,10 @@ public class Beslissing {
 							
 				}
 			}
-					
-			
+			else {//Ga terug naar vorig
+				opl_az =(ArrayList<Integer>)opl_az_oude.clone();
+				opl_ra = (ArrayList<Integer>)opl_ra_oude.clone();
+			}		
 		}
 	}
 	
