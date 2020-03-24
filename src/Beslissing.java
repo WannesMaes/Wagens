@@ -6,8 +6,8 @@ public class Beslissing {
 	private ArrayList<Integer> resEnAutoBeste;	// resEnAuto.length = aantal reservaties en ingevuld met de toegewezen auto's aan die reservatie (zonder 'car')
 	private int kostBeste = 0;
 	
-	private static int AANTAL_RA = 10; // later eventueel als argument in 
-	private static int AANTAL_AZ = 0;
+	private static int AANTAL_RA = 1; // later eventueel als argument in 
+	private static int AANTAL_AZ = 1;
 	
 	public Beslissing() {}
 	
@@ -103,8 +103,11 @@ public class Beslissing {
 		return ra;
 	}
 	
-	public void randomVeranderZoneVanAuto(ArrayList<Integer> opl_ra, ArrayList<Integer> opl_az, ArrayList<Reservatie> reservatieLijst, int aantalZones , ArrayList<Auto> autoLijst) {
+	public void randomVeranderZoneVanAuto( ArrayList<Reservatie> reservatieLijst, int aantalZones , ArrayList<Auto> autoLijst) {
 		//Initiele oplossing kost - doorgeven aan atribuut
+		
+		ArrayList<Integer> opl_ra=(ArrayList<Integer>)this.getResEnAuto().clone();
+		ArrayList<Integer> opl_az = (ArrayList<Integer>)this.getAutoEnZone().clone();
 		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
 		this.setKost(opl_kost);
 		System.out.println("Kost Initieel: " + opl_kost+"\n");
@@ -151,23 +154,38 @@ public class Beslissing {
 				}
 			}
 	}
-	
-	public void randomVeranderAutoVanReservatie(ArrayList<Integer> opl_ra, ArrayList<Integer> opl_az, ArrayList<Reservatie> reservatieLijst, int aantalZones, ArrayList<Auto> autoLijst) {
+	public ArrayList<ArrayList<Integer[]>> maakKopieTijdslotenAutos(ArrayList<Auto> autoLijst) {
+		ArrayList<ArrayList<Integer[]>> kopie = new ArrayList<ArrayList<Integer[]>>();
+		for(int i=0;i<autoLijst.size();i++) {
+			kopie.add(autoLijst.get(i).getTijdsloten());
+		}
+		return kopie;
+	}
+	public void zetKopieTijdslotenAutosTerug(ArrayList<ArrayList<Integer[]>> kopie, ArrayList<Auto> autoLijst) {
+		for(int i=0;i<kopie.size();i++) {
+			autoLijst.get(i).setTijdsloten(kopie.get(i));
+		}
+	}
+	public void randomVeranderAutoVanReservatie( ArrayList<Reservatie> reservatieLijst, int aantalZones, ArrayList<Auto> autoLijst) {
 		//VERANDER AUTO - RESERVATIE  + KLEINE INVLOED
-		int opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst); 
+		ArrayList<Integer> opl_ra=(ArrayList<Integer>)this.getResEnAuto().clone();
+		ArrayList<Integer> opl_az = (ArrayList<Integer>)this.getAutoEnZone().clone();
+		Random random = new Random();
+		ArrayList<ArrayList<Integer[]>> kopie;
+		int opl_kost; 
 		int autoID, resID;
 		int aantRes = opl_ra.size();
 		int aantAuto= opl_az.size();
-		Random random = new Random();
 		
 		opl_ra =(ArrayList<Integer>)this.getResEnAuto().clone() ; // voor  eerste lus
 		//ArrayList<Integer> opl_az_oude = opl_az;
-		ArrayList<Integer> opl_ra_oude = opl_ra;
+		ArrayList<Integer> opl_ra_oude = (ArrayList<Integer>)opl_ra.clone();;
 		for(int j=0; j<AANTAL_RA; j++) {
 			resID = random.nextInt(aantRes);
 			autoID = random.nextInt(aantAuto);
-			int start_oude = reservatieLijst.get(resID).getStartTijd();
-			int duur_oude = reservatieLijst.get(resID).getDuurTijd();
+			kopie = maakKopieTijdslotenAutos(autoLijst);
+			//int start_oude = reservatieLijst.get(resID).getStartTijd();
+			//int duur_oude = reservatieLijst.get(resID).getDuurTijd();
 			opl_ra = veranderAutoVanReservatie(opl_ra, resID, autoID); 
 			System.out.println("random verandering ra1" + opl_ra);
 			
@@ -194,7 +212,8 @@ public class Beslissing {
 				else {//Ga terug naar vorig
 					//opl_az =(ArrayList<Integer>)opl_az_oude.clone();
 					opl_ra = (ArrayList<Integer>)opl_ra_oude.clone();
-					autoLijst.get(autoID).pasAan(start_oude, duur_oude);
+					//autoLijst.get(autoID).pasAan(start_oude, duur_oude);
+					zetKopieTijdslotenAutosTerug(kopie,autoLijst);
 							
 				}
 			}
@@ -202,6 +221,7 @@ public class Beslissing {
 
 				//opl_az =(ArrayList<Integer>)opl_az_oude.clone();
 				opl_ra = (ArrayList<Integer>)opl_ra_oude.clone();
+				zetKopieTijdslotenAutosTerug(kopie,autoLijst);
 			}		
 		}
 	}
@@ -216,13 +236,16 @@ public class Beslissing {
 		this.setKost(opl_kost);
 		
 		System.out.println("INITIEEL:  \n\topl_ra: "+ opl_ra + '\n' + "\topl_az: " +opl_az+ '\n'  );
-		
-		this.randomVeranderZoneVanAuto(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
-		System.out.println("NA AZ AANPASSINGEN:  \n\topl_ra: "+ opl_ra + '\n' + "\topl_az: " +opl_az+ '\n'  );
-		
-		this.randomVeranderAutoVanReservatie(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
-		System.out.println("NA RA AANPASSINGEN: \n\topl_ra: "+ this.getResEnAuto() + '\n'+ "\topl_az: "+this.getAutoEnZone() +'\n' );
-		
+		for(int i=0;i<100000;i++) {
+			for(int j=0; j<100;j++) {
+				this.randomVeranderZoneVanAuto( reservatieLijst, aantalZones, autoLijst);
+				System.out.println("NA AZ AANPASSINGEN:  \n\topl_ra: "+ opl_ra + '\n' + "\topl_az: " +opl_az+ '\n'  );
+			}
+			for(int k=0; k<100;k++) {
+				this.randomVeranderAutoVanReservatie(reservatieLijst, aantalZones, autoLijst);
+				System.out.println("NA RA AANPASSINGEN: \n\topl_ra: "+ this.getResEnAuto() + '\n'+ "\topl_az: "+this.getAutoEnZone() +'\n' );
+			}
+		}
 	}
 	//Doel: nakijken of de wijziging van auto1 naar auto2 in de reservatie wel mogelijk is (auto, zone, tijd).
 	public Boolean testOpVeranderenAutoReservatie(int resID,int autoID, ArrayList<Reservatie> reservatieLijst, ArrayList<Integer> opl_az,Auto auto) {
