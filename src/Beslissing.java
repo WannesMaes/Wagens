@@ -2,12 +2,11 @@
 import java.util.ArrayList;
 import java.util.Random;
 public class Beslissing {
-	//verandering?
 	private ArrayList<Integer> autoEnZoneBeste;	// autoEnZone.length = aantal auto's en ingevuld met de toegewezen zones aan die auto(zone nummers zonder 'z')
 	private ArrayList<Integer> resEnAutoBeste;	// resEnAuto.length = aantal reservaties en ingevuld met de toegewezen auto's aan die reservatie (zonder 'car')
 	private int kostBeste = 0;
 	
-	private static int AANTAL_RA = 200; // later eventueel als argument in 
+	private static int AANTAL_RA = 10; // later eventueel als argument in 
 	private static int AANTAL_AZ = 0;
 	
 	public Beslissing() {}
@@ -91,7 +90,7 @@ public class Beslissing {
 		}	
 		return kost;
 	}
-	
+	 
 	//Veranderd de toegewezen zone van de auto
 	public ArrayList<Integer> veranderZoneVanAuto(ArrayList<Integer> az, int autoID, int zoneID) {
 		 az.set(autoID,zoneID);
@@ -112,39 +111,41 @@ public class Beslissing {
 		
 		int autoID, zoneID;
 		int aantAuto= opl_az.size();
-		ArrayList<Integer> opl_az_oude = opl_az;
-		ArrayList<Integer> opl_ra_oude = opl_ra;
+		ArrayList<Integer> opl_az_oude = (ArrayList<Integer>)opl_az.clone();
+		ArrayList<Integer> opl_ra_oude = (ArrayList<Integer>)opl_ra.clone();
 		Random random = new Random();
 		//VERANDER AUTO VAN ZONE + GROOTSTE INVLOED
 		for(int k=0; k<AANTAL_AZ; k++) {
 			autoID = random.nextInt(aantAuto); 
 			zoneID = random.nextInt(aantalZones);
-			System.out.println("\nLus "+k);
-			System.out.println("\tOude oplossing AZ: "+opl_az_oude);
-			System.out.println("\tOude oplossing RA: "+opl_ra_oude);
-			System.out.println("\tBeste oplossing AZ: "+opl_az_oude);
-			System.out.println("\tBeste oplossing RA: "+opl_ra_oude);
-			System.out.println("\tOplossing AZ: "+opl_az);
-			System.out.println("\tOplossing RA: "+opl_ra);
+			//System.out.println("\nLus "+k);
+			//System.out.println("\tOude oplossing AZ: "+opl_az_oude);
+			//System.out.println("\tOude oplossing RA: "+opl_ra_oude);
+			//System.out.println("\tOplossing AZ: "+opl_az);
+			//System.out.println("\tOplossing RA: "+opl_ra);
 			opl_az = veranderZoneVanAuto(opl_az, autoID, zoneID);
-			System.out.println("\n\tAZ aanpassing:" + opl_az+"\n");
+			//System.out.println("\n\tAZ aanpassing:" + opl_az+"\n");
 					
 			//FEASIBLE CHECK : daarna pas kost berekenen
-			opl_ra = this.controleVeranderingAutoNaarZone(autoID, zoneID,opl_ra,reservatieLijst, autoLijst.get(autoID));// controle geen slechte reservaties (weghalen)
-			System.out.println("\tRA controle:" + opl_ra);
+			ArrayList<Integer[]>oude_tijdsloten = (ArrayList<Integer[]>) autoLijst.get(autoID).getTijdsloten().clone();
+			opl_ra = controleVeranderingAutoNaarZone(autoID, zoneID,opl_ra,reservatieLijst, autoLijst.get(autoID));// controle geen slechte reservaties (weghalen)
+			//System.out.println("\tRA controle:" + opl_ra);
 			opl_ra = controleVoorNieuweReservaties(opl_ra, opl_az, reservatieLijst, autoLijst) ; // niet toegewezen kijken of die wel kunnen w toegewezen
-			System.out.println("\tRA nieuw:" + opl_ra);		
+			
+			//System.out.println("\tRA nieuw:" + opl_ra);		
 			opl_kost = berekenKost(opl_ra, opl_az,reservatieLijst);
-			System.out.println("\n\tTest: "+opl_kost+" < "+this.getKost());
+			//System.out.println("\n\tTest: "+opl_kost+" < "+this.getKost());
 			if(opl_kost < this.getKost()) {
 				opl_az_oude = (ArrayList<Integer>)opl_az.clone();
 				opl_ra_oude = (ArrayList<Integer>)opl_ra.clone();
 				this.setAutoEnZone(opl_az);
 				this.setResEnAuto(opl_ra);
 				this.setKost(opl_kost);
+				System.out.println("\tOplossing kost nieuwXXXXXXXXx: "+opl_kost);
 			}
 			else {//Ga terug naar vorig
 				opl_az =(ArrayList<Integer>)opl_az_oude.clone();
+				autoLijst.get(autoID).setTijdsloten(oude_tijdsloten);
 				opl_ra = (ArrayList<Integer>)opl_ra_oude.clone();
 						
 				}
@@ -157,40 +158,49 @@ public class Beslissing {
 		int autoID, resID;
 		int aantRes = opl_ra.size();
 		int aantAuto= opl_az.size();
-		ArrayList<Integer> opl_az_oude = opl_az;
-		ArrayList<Integer> opl_ra_oude = opl_ra;
 		Random random = new Random();
 		
 		opl_ra =(ArrayList<Integer>)this.getResEnAuto().clone() ; // voor  eerste lus
+		//ArrayList<Integer> opl_az_oude = opl_az;
+		ArrayList<Integer> opl_ra_oude = opl_ra;
 		for(int j=0; j<AANTAL_RA; j++) {
 			resID = random.nextInt(aantRes);
 			autoID = random.nextInt(aantAuto);
+			int start_oude = reservatieLijst.get(resID).getStartTijd();
+			int duur_oude = reservatieLijst.get(resID).getDuurTijd();
 			opl_ra = veranderAutoVanReservatie(opl_ra, resID, autoID); 
+			System.out.println("random verandering ra1" + opl_ra);
 			
 			//FEASIBLE CHECK : controleer of het gaat, indien wel dan pas beste aan 
 			if(this.testOpVeranderenAutoReservatie( resID, autoID,  reservatieLijst, opl_az, autoLijst.get(autoID))) {
 				//pas tijd effectief aan
 				int start = reservatieLijst.get(resID).getStartTijd();
 				int duur = reservatieLijst.get(resID).getDuurTijd();
+				//System.out.println("\"Starttijd aanpas 2: " +start + "Duurtijd aanpas 2: "+ duur);
 				autoLijst.get(autoID).pasAan(start, duur);
-				controleVoorNieuweReservaties(opl_ra, opl_az, reservatieLijst, autoLijst) ; // niet toegewezen kijken of die wel kunnen w toegewezen
-				
+				opl_ra = controleVoorNieuweReservaties(opl_ra, opl_az, reservatieLijst, autoLijst) ; // niet toegewezen kijken of die wel kunnen w toegewezen
+				System.out.println("Voor beste ra" + opl_ra);
 				opl_kost = berekenKost(opl_ra, this.getAutoEnZone(),reservatieLijst);
+				System.out.println("Voor beste" + opl_kost);
+				System.out.println("Vergelijking: " + opl_kost +'<'+ this.getKost());
 				if(opl_kost < this.getKost()) {		
-					opl_az_oude = (ArrayList<Integer>)opl_az.clone();
+					//opl_az_oude = (ArrayList<Integer>)opl_az.clone();
 					opl_ra_oude = (ArrayList<Integer>)opl_ra.clone();
-					this.setAutoEnZone(opl_az);
+					//this.setAutoEnZone(opl_az);
 					this.setResEnAuto(opl_ra);
 					this.setKost(opl_kost);
+					System.out.println("Kost nieuw na: reservatieshift" + opl_kost);
 				}
 				else {//Ga terug naar vorig
-					opl_az =(ArrayList<Integer>)opl_az_oude.clone();
+					//opl_az =(ArrayList<Integer>)opl_az_oude.clone();
 					opl_ra = (ArrayList<Integer>)opl_ra_oude.clone();
+					autoLijst.get(autoID).pasAan(start_oude, duur_oude);
 							
 				}
 			}
 			else {//Ga terug naar vorig
-				opl_az =(ArrayList<Integer>)opl_az_oude.clone();
+
+				//opl_az =(ArrayList<Integer>)opl_az_oude.clone();
 				opl_ra = (ArrayList<Integer>)opl_ra_oude.clone();
 			}		
 		}
@@ -206,10 +216,12 @@ public class Beslissing {
 		this.setKost(opl_kost);
 		
 		System.out.println("INITIEEL:  \n\topl_ra: "+ opl_ra + '\n' + "\topl_az: " +opl_az+ '\n'  );
+		
 		this.randomVeranderZoneVanAuto(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
 		System.out.println("NA AZ AANPASSINGEN:  \n\topl_ra: "+ opl_ra + '\n' + "\topl_az: " +opl_az+ '\n'  );
+		
 		this.randomVeranderAutoVanReservatie(opl_ra, opl_az, reservatieLijst, aantalZones, autoLijst);
-		System.out.println("NA RA AANPASSINGEN: \n\topl_ra: "+ opl_ra + '\n'+ "\topl_az: "+opl_az+ '\n' );
+		System.out.println("NA RA AANPASSINGEN: \n\topl_ra: "+ this.getResEnAuto() + '\n'+ "\topl_az: "+this.getAutoEnZone() +'\n' );
 		
 	}
 	//Doel: nakijken of de wijziging van auto1 naar auto2 in de reservatie wel mogelijk is (auto, zone, tijd).
@@ -292,7 +304,7 @@ public class Beslissing {
 	public ArrayList<Integer> controleVoorNieuweReservaties(ArrayList<Integer> ra, ArrayList<Integer> az, ArrayList<Reservatie> r, ArrayList<Auto> autos)
 	{
 		boolean gevonden = false;
-		System.out.println("\t\t\t"+ra.size());
+		//System.out.println("\t\t\t"+ra.size());
 		for(int i=0;i<ra.size();i++)
 		{
 			gevonden=false;
@@ -308,9 +320,14 @@ public class Beslissing {
 						//Testen of het tijdslot past
 						if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
 						{
+							for(int slot=0;slot<autos.get(r.get(i).getAutoIDs().get(j)).getTijdsloten().size();slot++) {
+								//System.out.println("De tijdsloten van auto: " +autos.get(r.get(i).getAutoIDs().get(j))+ " met tijdsloten: "+ autos.get(r.get(i).getAutoIDs().get(j)).getTijdsloten().get(slot)[0] + ',' + autos.get(r.get(i).getAutoIDs().get(j)).getTijdsloten().get(slot)[1] );
+							}
 							ra.set(i,r.get(i).getAutoIDs().get(j));
 							gevonden=true;
 							Auto a = autos.get(r.get(i).getAutoIDs().get(j));
+							//System.out.println("request 3: " + r.get(i));
+							//System.out.println("\"Starttijd aanpas 3: " + r.get(i).getStartTijd() + "Duurtijd aanpas 3: "+ r.get(i).getDuurTijd());
 							a.pasAan(r.get(i).getStartTijd(),r.get(i).getDuurTijd());
 							break; //Op naar de volgende reservatie
 						}
@@ -330,9 +347,14 @@ public class Beslissing {
 								//Testen of het tijdslot past
 								if(autos.get(r.get(i).getAutoIDs().get(j)).testenopTijd(r.get(i).getStartTijd(), r.get(i).getDuurTijd()))
 								{
+									for(int slot=0;slot<autos.get(r.get(i).getAutoIDs().get(j)).getTijdsloten().size();slot++) {
+								//		System.out.println("De tijdsloten van auto: " +autos.get(r.get(i).getAutoIDs().get(j))+ " met tijdsloten: "+ autos.get(r.get(i).getAutoIDs().get(j)).getTijdsloten().get(slot)[0] + ',' + autos.get(r.get(i).getAutoIDs().get(j)).getTijdsloten().get(slot)[1] );
+									}
 									gevonden=true;
 									ra.set(i,r.get(i).getAutoIDs().get(j));
 									Auto a = autos.get(r.get(i).getAutoIDs().get(j));
+									//System.out.println("request 1: " + r.get(i));
+									//System.out.println("Starttijd aanpas 1: " + r.get(i).getStartTijd() + "Duurtijd aanpas 1: "+ r.get(i).getDuurTijd());
 									a.pasAan(r.get(i).getStartTijd(),r.get(i).getDuurTijd());
 									break;
 								}
@@ -340,13 +362,13 @@ public class Beslissing {
 						}
 						if(gevonden)
 						{
-							System.out.println("\t\tAuto "+r.get(i).getAutoIDs().get(j)+" gevonden voor res "+i);
+							//System.out.println("\t\tAuto "+r.get(i).getAutoIDs().get(j)+" gevonden voor res "+i);
 							break;
 						}
 					}
 					if(!gevonden)
 					{
-						System.out.println("\t\tGeen auto kunnen toewijzen bij res "+i);
+						//System.out.println("\t\tGeen auto kunnen toewijzen bij res "+i);
 					}
 				}
 			}

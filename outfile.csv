@@ -1,4 +1,4 @@
-23745
+23220
 +Vehicle assignments
 car0;z12
 car1;z12
@@ -16,7 +16,7 @@ car12;z12
 car13;z12
 +Assigned requests
 req2;car2
-req3;car1
+req3;car10
 req7;car13
 req8;car0
 req9;car0
@@ -32,10 +32,10 @@ req30;car8
 req32;car11
 req33;car3
 req36;car10
-req39;car10
+req39;car5
 req45;car1
 req52;car12
-req54;car3
+req54;car5
 req55;car2
 req58;car4
 req61;car3
@@ -48,8 +48,10 @@ req75;car9
 req76;car0
 req77;car7
 req84;car2
+req85;car9
 req87;car3
 req89;car6
+req98;car9
 +Unassigned requests
 req0
 req1
@@ -103,7 +105,6 @@ req80
 req81
 req82
 req83
-req85
 req86
 req88
 req90
@@ -114,5 +115,4 @@ req94
 req95
 req96
 req97
-req98
 req99

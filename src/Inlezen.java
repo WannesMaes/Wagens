@@ -9,7 +9,9 @@ public class Inlezen
 	private static final int MINUTENINDAG = 1440;
 	public Inlezen()
 	{
+		
 		String filenaam = "100_5_14_25.csv";
+		//String filenaam = "toy1.csv";
 		//String filenaam = "360_5_71_25.csv";
         BufferedReader reader = null;
         String regel = "";
