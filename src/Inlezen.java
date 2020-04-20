@@ -7,10 +7,10 @@ public class Inlezen
 	private ArrayList<Reservatie> reservaties = new ArrayList<Reservatie>();
 	private ArrayList<Zone> zones= new ArrayList<Zone>();
 	private static final int MINUTENINDAG = 1440;
-	public Inlezen()
+	public Inlezen(String filenaam)
 	{
 		
-		String filenaam = "100_5_14_25.csv";
+		//String filenaam = "100_5_14_25.csv";
 		//String filenaam = "toy1.csv";
 		//String filenaam = "360_5_71_25.csv";
         BufferedReader reader = null;

@@ -3,10 +3,12 @@ import java.util.*;
 //Wannes, Leen, Birte
 public class Controller 
 {
-	
-	public Controller()
+	private static String inputPad;
+	private static String outputPad;
+	private static int seconden;
+	public Controller(String inputPad,String outputPad,int seconden)
 	{
-		Inlezen in = new Inlezen();
+		Inlezen in = new Inlezen(inputPad);
 		System.out.println(in.getAutos());
 		System.out.println(in.getReservaties());
 		System.out.println(in.getZones());
@@ -29,10 +31,10 @@ public class Controller
 			ra.add(null);
 		}
 		//Collections.fill(ra,null);
-		Beslissing b = new Beslissing(az,ra,300);
+		Beslissing b = new Beslissing(az,ra,seconden);
 		System.out.println(ra);
 		b.localSearch(in.getReservaties(), in.getZones().size(), in.getAutos());
-		Wegschrijven out = new Wegschrijven("outfile.csv",b);
+		Wegschrijven out = new Wegschrijven(outputPad,b);
 		out.schrijfWeg();
 		
 		/*
@@ -91,7 +93,11 @@ public class Controller
 	public static void main(String[] args) 
 	{
 		//System.out.println(args[0]);
-		new Controller();
+		inputPad = args[0];
+		outputPad = args[1];
+		seconden = Integer.parseInt(args[2]);
+		System.out.println("Argumenten: "+inputPad+", "+outputPad+", "+seconden);
+		new Controller(inputPad,outputPad,seconden);
 
 	}
 }
