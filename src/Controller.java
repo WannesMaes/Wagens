@@ -29,7 +29,7 @@ public class Controller
 			ra.add(null);
 		}
 		//Collections.fill(ra,null);
-		Beslissing b = new Beslissing(az,ra);
+		Beslissing b = new Beslissing(az,ra,300);
 		System.out.println(ra);
 		b.localSearch(in.getReservaties(), in.getZones().size(), in.getAutos());
 		Wegschrijven out = new Wegschrijven("outfile.csv",b);
